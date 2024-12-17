@@ -55,7 +55,7 @@ import { parseServerActionResponse } from "@/lib/utils";
 
     const response = await fetch("https://api.acedata.cloud/suno/audios", options);
     
-    const data = await response.json() as { task_id?: string };
+    const data = await response.json() as { task_id?: string, music:SunoRequest[] };
     let taskId = "";
     if (data?.task_id) {
       taskId = data.task_id;
@@ -83,7 +83,7 @@ import { parseServerActionResponse } from "@/lib/utils";
     }
 
     return parseServerActionResponse({
-      data: taskId,
+      data: data,
       error: "",
       status: "SUCCESS",
     });

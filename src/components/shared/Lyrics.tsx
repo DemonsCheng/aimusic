@@ -8,9 +8,11 @@ interface LyricsProps {
   author: string;
   date: string;
   verses: string;
+  isPlaying?: boolean;
+  coverImage?: string;
 }
 
-export function Lyrics({ title, genre, author, date, verses }: LyricsProps) {
+export function Lyrics({ title, genre, author, date, verses, isPlaying = false, coverImage }: LyricsProps) {
   const renderVerses = (verses: string) => {
     const sections = verses.split(/\[(.*?)\]/g).filter(Boolean);
     const result = [];
@@ -38,7 +40,81 @@ export function Lyrics({ title, genre, author, date, verses }: LyricsProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl  backdrop-blur p-6 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-12rem)]">
+    <div className="w-full max-w-2xl backdrop-blur p-6 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-2rem)]">
+      {/* Vinyl Record Player */}
+      <div className="relative w-full aspect-square max-w-[300px] mx-auto mb-8">
+        {/* Tonearm */}
+        <div 
+          className={`absolute -right-4 -top-4 w-40 h-40 transition-transform duration-1000 ${
+            isPlaying ? 'rotate-[20deg]' : 'rotate-[-10deg]'
+          }`}
+          style={{
+            transformOrigin: 'top right',
+            filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.3))'
+          }}
+        >
+          {/* Tonearm base */}
+          <div className="absolute top-0 right-0 w-5 h-5 bg-white rounded-full opacity-90" />
+          
+          {/* Main arm - using pseudo elements for the curved design */}
+          <div 
+            className="absolute top-[10px] right-[10px] w-[4px] h-32 bg-white rounded-full before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-white before:rounded-full before:transform before:rotate-[2deg] before:origin-top"
+            style={{
+              transformOrigin: 'top center',
+              transform: 'rotate(-8deg)',
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.85))'
+            }}
+          />
+          
+          {/* Cartridge with more detail */}
+          <div className="absolute bottom-6 right-[2px] flex items-center">
+            {/* Cartridge body */}
+            <div 
+              className="w-10 h-3 bg-white rounded-sm"
+              style={{
+                transform: 'rotate(-8deg)',
+                background: 'linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95))'
+              }}
+            >
+              {/* Cartridge details */}
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1 h-1.5 bg-white/60" />
+            </div>
+          </div>
+        </div>
+        
+        {/* Record */}
+        <div 
+          className={`relative w-full aspect-square rounded-full bg-[#333] ${
+            isPlaying ? 'animate-spin' : ''
+          }`}
+          style={{ 
+            animationDuration: '10s', 
+            animationTimingFunction: 'linear', 
+            animationIterationCount: 'infinite',
+            boxShadow: '0 0 15px rgba(0,0,0,0.5)'
+          }}
+        >
+          {/* Record grooves */}
+          <div className="absolute inset-[15%] rounded-full border-[1px] border-gray-600 opacity-50" />
+          <div className="absolute inset-[25%] rounded-full border-[1px] border-gray-600 opacity-50" />
+          <div className="absolute inset-[35%] rounded-full border-[1px] border-gray-600 opacity-50" />
+          
+          {/* Inner circle with cover art */}
+          <div className="absolute inset-[20%] rounded-full overflow-hidden ring-4 ring-black">
+            {coverImage ? (
+              <img 
+                src={coverImage} 
+                alt="Album cover" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-700" />
+            )}
+          </div>
+        </div>
+      </div>
+      
       {/* Header Section */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">{title}</h2>

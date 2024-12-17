@@ -58,13 +58,15 @@ export default function Component() {
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={15} minSize={15} maxSize={20}>
+        <ResizablePanel defaultSize={15} minSize={15} maxSize={25}>
           <div className="h-full bg-muted/50 rounded-xl p-4">
             <Lyrics
               title="Furry Friends"
               genre="playful, pop"
               author="JovialNocturnes0685"
               date="2024年12月2日 15:17"
+              isPlaying={true}
+              coverImage="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               verses={`[Verse]
                 In the morning light they wake me
                 Tiny paws a gentle plea
