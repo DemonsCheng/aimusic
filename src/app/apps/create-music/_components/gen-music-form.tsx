@@ -3,7 +3,7 @@ import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shared/ui/button";
 import {
   Form,
   FormControl,
@@ -34,6 +34,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { handleInstrumentalForm } from "@/server/actions/InstrumentalFormAction";
 
 const instrumentalFormSchema = z.object({
   description: z
@@ -99,12 +100,14 @@ export default function MusicForm() {
     console.log(values);
   }
 
-  function onSubmitInstrumentalForm(
+  async function  onSubmitInstrumentalForm(
     values: z.infer<typeof instrumentalFormSchema>
   ) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const result = await handleInstrumentalForm(values);
+    console.log("result", result);
   }
 
   return (
@@ -134,6 +137,7 @@ export default function MusicForm() {
                           placeholder="Enter your own lyrics or describe a song and click Generate Lyrics..."
                           maxLength={2000}
                           rows={4}
+                          {...field}
                         />
                       </FormControl>
                       <FormDescription>
@@ -157,6 +161,7 @@ export default function MusicForm() {
                           placeholder="Enter style of music"
                           maxLength={120}
                           rows={4}
+                          {...field}
                         />
                       </FormControl>
                       <FormDescription>
@@ -179,6 +184,7 @@ export default function MusicForm() {
                           defaultValue=""
                           placeholder="Enter title of music"
                           maxLength={120}
+                          {...field}
                         />
                       </FormControl>
                       <FormDescription>
@@ -189,7 +195,7 @@ export default function MusicForm() {
                   )}
                 />
 
-                <Button type="submit">Create</Button>
+                <Button className="cursor-pointer" size="xl" variant="primary" type="submit">Create</Button>
               </form>
             </Form>
           </CardContent>
@@ -218,6 +224,7 @@ export default function MusicForm() {
                           placeholder="Enter your own lyrics or describe a song and click Generate Lyrics..."
                           maxLength={200}
                           rows={4}
+                          {...field}
                         />
                       </FormControl>
                       <FormDescription>
@@ -228,7 +235,9 @@ export default function MusicForm() {
                   )}
                 />
 
-                <Button type="submit">Create</Button>
+                <div className="flex items-center justify-center">
+                  <Button className="cursor-pointer" size="xl" variant="primary" type="submit">Create</Button>
+                </div>
               </form>
             </Form>
           </CardContent>

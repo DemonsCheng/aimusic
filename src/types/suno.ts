@@ -10,7 +10,7 @@
     style?: string;
     audio_id?:string;
     continue_at?: number;
-    callback_url:string;
+    callback_url?:string;
   }
 
 

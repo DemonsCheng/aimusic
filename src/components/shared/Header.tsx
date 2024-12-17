@@ -6,6 +6,7 @@ import ThemeSwitch from "./ThemeSwitch";
 // import SearchButton from "../search/SearchButton";
 import ActiveLink from "@/components/shared/ActiveLink";
 import Image from "next/image";
+import { LoginButton } from "../auth/login-button";
 
 const Header = () => {
   return (
@@ -54,6 +55,7 @@ const Header = () => {
         {/* <SearchButton /> */}
         <ThemeSwitch />
         <MobileNav />
+        <LoginButton >Login</LoginButton>
       </div>
     </header>
   );
