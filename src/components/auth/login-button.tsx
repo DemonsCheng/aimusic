@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 // import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/auth/login-form";
+import { Button } from "../shared/ui/button";
 
 interface LoginButtonProps {
   children: React.ReactNode;
@@ -35,8 +36,8 @@ export const LoginButton = ({
   }
 
   return (
-    <span onClick={onClick} className="cursor-pointer">
+    <Button size="xl" variant="primary" onClick={onClick} className="cursor-pointer ">
       {children}
-    </span>
+    </Button>
   );
 };

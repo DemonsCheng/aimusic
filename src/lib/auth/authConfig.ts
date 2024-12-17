@@ -3,7 +3,7 @@ import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 // import { setName } from "@/src/lib/auth/setNameServerAction";
 // import { clearStaleTokens } from "./clearStaleTokensServerAction";
-import { db } from "@/server/db/index";
+import { db } from "@/lib/db/index";
 import Resend from "next-auth/providers/resend";
 import { sendVerificationRequest } from "@/lib/email/sendVerificationRequest";
 
