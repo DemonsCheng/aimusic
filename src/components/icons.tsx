@@ -9,6 +9,7 @@ import {
   CreditCard,
   File,
   FileText,
+  Heart,
   HelpCircle,
   Image,
   Laptop,
@@ -20,9 +21,13 @@ import {
   LucideShoppingBag,
   Moon,
   MoreVertical,
+  Pause,
   Pizza,
+  Play,
   Plus,
   Settings,
+  SkipBack,
+  SkipForward,
   SunMedium,
   Trash,
   Twitter,
@@ -30,6 +35,7 @@ import {
   UserCircle2Icon,
   UserPen,
   UserX2Icon,
+  Volume2,
   X
 } from 'lucide-react';
 
@@ -82,5 +88,12 @@ export const Icons = {
     </svg>
   ),
   twitter: Twitter,
-  check: Check
+  heart: Heart,
+  dotsHorizontal: MoreVertical,
+  check: Check,
+  play: Play,
+  pause: Pause,
+  skipBack: SkipBack,
+  skipForward: SkipForward,
+  volume2: Volume2,
 };

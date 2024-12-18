@@ -1,3 +1,4 @@
+import exp from "constants";
 
   export interface SunoRequest {
     action: string;
@@ -34,4 +35,20 @@ export interface SunoCallbackResponse{
     task_id:string;
     error:string;
     track_id:string;
+}
+
+
+export interface SunoItemResponse{
+  id: string,
+  title: string,
+  image_url: string,
+  lyric: string,
+  audio_url: string,
+  video_url: string,
+  created_at: string,
+  model: string,
+  state: string,
+  prompt: string,
+  style: string,
+  duration: number
 }

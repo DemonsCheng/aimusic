@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { getRequestContext } from '@cloudflare/next-on-pages'
 import type { SunoRequest } from '@/types/suno'
 export const runtime = 'edge'
 import { createTask } from '@/server/service/task';
@@ -23,6 +22,7 @@ export async function POST(request: NextRequest) {
           "authorization": "Bearer "+ process.env.SUNO_API_KEY,
           "content-type": "application/json"
         },
+        timeout: 1200000,
         body: JSON.stringify(sunoRequest)
       };
       
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
     if (data?.task_id) {
       taskId = data.task_id;
       console.log("taskId", taskId);
+      console.log("data", data);
     }
 
     // 保存任务信息
@@ -52,6 +53,9 @@ export async function POST(request: NextRequest) {
         message:"create task failed",
       })
     }
+
+    //保存音乐
+    // const 
 
 
     //TODO：扣除用户积分

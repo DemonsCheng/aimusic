@@ -2,38 +2,56 @@
 
 import React from 'react';
 import { Avatar } from "@/components/ui/avatar";
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  duration: string;
-  coverUrl: string;
-}
+import { SelectMusic } from '@/lib/db/schema';
+import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
 interface PlaylistItemProps {
-  song: Song;
+  song: SelectMusic;
+  index: number;
+  onClick?: () => void;
+  isPlaying?: boolean;
 }
 
-export function PlaylistItem({ song }: PlaylistItemProps) {
+export function PlaylistItem({ song, index, onClick, isPlaying }: PlaylistItemProps) {
   return (
     <button
       key={song.id}
-      className="flex items-center space-x-4 p-2 hover:bg-white/10 rounded-lg transition-colors w-full"
-      onClick={() => console.log(`Play song ${song.title}`)}
+      className={cn(
+        "flex items-center w-full px-4 py-2 hover:bg-gray-50 group",
+        isPlaying && "bg-gray-50"
+      )}
+      onClick={onClick}
     >
-      <Avatar className="h-10 w-10 rounded-md">
+      <div className="w-8 relative">
+        <span className={cn(
+          "text-sm text-gray-400 group-hover:hidden",
+          isPlaying && "hidden"
+        )}>{index}</span>
+        <Icons.play className={cn(
+          "w-4 h-4 text-gray-900 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block",
+          isPlaying && "block"
+        )} />
+      </div>
+      <Avatar className="h-10 w-10 rounded">
         <img
-          src={song.coverUrl}
+          src={song.image_url || "/default-album.png"}
           alt={song.title}
           className="object-cover"
         />
       </Avatar>
-      <div className="flex-1 space-y-1 text-left">
-        <p className="text-sm font-medium leading-none">{song.title}</p>
-        <p className="text-sm text-muted-foreground">{song.artist}</p>
+      <div className="flex-1 ml-4 text-left">
+        <p className={cn(
+          "text-sm font-medium text-gray-900",
+          isPlaying && "text-blue-600"
+        )}>{song.title}</p>
+        <p className="text-sm text-gray-500">{song.style}</p>
       </div>
-      <div className="text-sm text-muted-foreground">{song.duration}</div>
+      <div className="flex items-center space-x-4">
+        <Icons.heart className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <span className="text-sm text-gray-500">{song.duration}</span>
+        <Icons.dotsHorizontal className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
     </button>
   );
 }

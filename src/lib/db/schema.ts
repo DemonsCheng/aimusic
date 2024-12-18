@@ -7,8 +7,10 @@ import {
   integer,
   serial,
   varchar,
+  doublePrecision,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
+import { number } from "zod"
  
  
 export const users = pgTable("user", {
@@ -112,9 +114,9 @@ export const taskTable = pgTable("task", {
 export type InsertTask = typeof taskTable.$inferInsert;
 
 
-
 export const musicTable = pgTable("music", {
   id: serial("id").primaryKey(),
+  suno_id: text("suno_id").notNull(),
   userId: text("user_id").notNull(),
   taskId: text("task_id").notNull(),
   lyric: text("lyric"),
@@ -125,6 +127,8 @@ export const musicTable = pgTable("music", {
   audio_url: text("audio_url"),
   image_url: text("image_url"),
   video_url: text("video_url"),
+  state: text("state"),
+  duration: doublePrecision("duration"),
   remark: text("remark"),
   created_at: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updated_at: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),

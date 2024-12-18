@@ -36,7 +36,7 @@ export const LoginButton = ({
   }
 
   return (
-    <Button size="xl" variant="primary" onClick={onClick} className="cursor-pointer ">
+    <Button className="cursor-pointer" size="xl" variant="primary" onClick={onClick} >
       {children}
     </Button>
   );

@@ -54,21 +54,20 @@ export function Lyrics({ title, genre, author, date, verses, isPlaying = false, 
           }}
         >
           {/* Tonearm base */}
-          <div className="absolute top-0 right-0 w-5 h-5 bg-white rounded-full opacity-90" />
+          {/* <div className="absolute top-0 right-0 w-5 h-5 bg-white rounded-full opacity-90" /> */}
           
           {/* Main arm - using pseudo elements for the curved design */}
-          <div 
+          {/* <div 
             className="absolute top-[10px] right-[10px] w-[4px] h-32 bg-white rounded-full before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-white before:rounded-full before:transform before:rotate-[2deg] before:origin-top"
             style={{
               transformOrigin: 'top center',
               transform: 'rotate(-8deg)',
               background: 'linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.85))'
             }}
-          />
+          /> */}
           
           {/* Cartridge with more detail */}
-          <div className="absolute bottom-6 right-[2px] flex items-center">
-            {/* Cartridge body */}
+          {/* <div className="absolute bottom-6 right-[2px] flex items-center">
             <div 
               className="w-10 h-3 bg-white rounded-sm"
               style={{
@@ -76,11 +75,10 @@ export function Lyrics({ title, genre, author, date, verses, isPlaying = false, 
                 background: 'linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95))'
               }}
             >
-              {/* Cartridge details */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full" />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1 h-1.5 bg-white/60" />
             </div>
-          </div>
+          </div> */}
         </div>
         
         {/* Record */}
