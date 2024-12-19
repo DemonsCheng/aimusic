@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -8,9 +7,15 @@ import { SelectMusic } from "@/lib/db/schema";
 import { Icons } from "@/components/icons";
 import { MusicPlayer } from "@/components/music-player";
 
-export default function Playlist() {
+interface PlaylistProps {
+  onSongSelect?: (song: SelectMusic | undefined) => void;
+  onPlayingChange?: (isPlaying: boolean) => void;
+}
+
+export default function Playlist({ onSongSelect, onPlayingChange }: PlaylistProps) {
   const [songs, setSongs] = useState<SelectMusic[]>([]);
   const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
+  const [isPlaying, setIsPlaying] = useState(false);
 
   React.useEffect(() => {
     const fetchSongs = async () => {
@@ -24,27 +29,32 @@ export default function Playlist() {
   }, []);
 
   const handleSongClick = (song: SelectMusic) => {
-    setCurrentSong(song);
+    if (currentSong?.id === song.id) {
+      const newIsPlaying = !isPlaying;
+      setIsPlaying(newIsPlaying);
+      onPlayingChange?.(newIsPlaying);
+    } else {
+      setCurrentSong(song);
+      setIsPlaying(true);
+      onSongSelect?.(song);
+      onPlayingChange?.(true);
+    }
   };
 
   const handleClosePlayer = () => {
     setCurrentSong(undefined);
+    setIsPlaying(false);
+    onSongSelect?.(undefined);
+    onPlayingChange?.(false);
   };
 
   return (
     <>
-      <div className="h-screen w-full bg-white p-6 pb-28">
-        <div className="max-w-4xl mx-auto">
+      <div className="h-screen w-full p-1 pb-28">
+        <div className=" mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">PlayList</h2>
-            <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-full hover:bg-gray-100">
-                <Icons.heart className="w-6 h-6 text-gray-500" />
-              </button>
-              <button className="p-2 rounded-full hover:bg-gray-100">
-                <Icons.dotsHorizontal className="w-6 h-6 text-gray-500" />
-              </button>
-            </div>
+            
           </div>
           
           <ScrollArea className="h-[calc(100vh-180px)]">
@@ -58,7 +68,7 @@ export default function Playlist() {
                     song={song} 
                     index={index + 1}
                     onClick={() => handleSongClick(song)}
-                    isPlaying={currentSong?.id === song.id}
+                    isPlaying={currentSong?.id === song.id && isPlaying}
                   />
                 ))
               )}
@@ -66,10 +76,14 @@ export default function Playlist() {
           </ScrollArea>
         </div>
       </div>
-      <MusicPlayer 
-        currentSong={currentSong} 
-        onClose={handleClosePlayer}
-      />
+      {currentSong && (
+        <MusicPlayer 
+          currentSong={currentSong} 
+          onClose={handleClosePlayer}
+          isPlaying={isPlaying}
+          onPlayPause={setIsPlaying}
+        />
+      )}
     </>
   );
 }

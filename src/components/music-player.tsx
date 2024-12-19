@@ -9,10 +9,11 @@ import { SelectMusic } from "@/lib/db/schema";
 interface MusicPlayerProps {
   currentSong?: SelectMusic;
   onClose: () => void;
+  isPlaying: boolean;
+  onPlayPause: (playing: boolean) => void;
 }
 
-export function MusicPlayer({ currentSong, onClose }: MusicPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
+export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: MusicPlayerProps) {
   const [volume, setVolume] = useState(100);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -21,28 +22,28 @@ export function MusicPlayer({ currentSong, onClose }: MusicPlayerProps) {
     if (currentSong?.audio_url) {
       if (audioRef.current) {
         audioRef.current.src = currentSong.audio_url;
-        audioRef.current.play();
-        setIsPlaying(true);
+        if (isPlaying) {
+          audioRef.current.play();
+        }
       }
     }
   }, [currentSong]);
 
   useEffect(() => {
     if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (audioRef.current) {
       audioRef.current.volume = volume / 100;
     }
   }, [volume]);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
@@ -66,6 +67,10 @@ export function MusicPlayer({ currentSong, onClose }: MusicPlayerProps) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const handlePlayPause = () => {
+    onPlayPause(!isPlaying);
+  };
+
   if (!currentSong) return null;
 
   return (
@@ -73,7 +78,7 @@ export function MusicPlayer({ currentSong, onClose }: MusicPlayerProps) {
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={() => onPlayPause(false)}
       />
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[60%] bg-white border-t h-20 z-[100] shadow-lg rounded-t-lg">
         <div className="h-full flex items-center justify-between relative px-6">
@@ -109,14 +114,14 @@ export function MusicPlayer({ currentSong, onClose }: MusicPlayerProps) {
               <button className="text-gray-400 hover:text-gray-600">
                 <Icons.skipBack className="w-5 h-5" />
               </button>
-              <button 
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white"
-                onClick={togglePlay}
+              <button
+                onClick={handlePlayPause}
+                className="p-2 hover:bg-gray-100 rounded-full"
               >
                 {isPlaying ? (
-                  <Icons.pause className="w-4 h-4" />
+                  <Icons.pause className="w-6 h-6" />
                 ) : (
-                  <Icons.play className="w-4 h-4" />
+                  <Icons.play className="w-6 h-6" />
                 )}
               </button>
               <button className="text-gray-400 hover:text-gray-600">

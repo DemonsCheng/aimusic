@@ -40,9 +40,9 @@ export function Lyrics({ title, genre, author, date, verses, isPlaying = false, 
   };
 
   return (
-    <div className="w-full max-w-2xl backdrop-blur p-6 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-2rem)]">
+    <div className="w-full max-w-2xl   p-1  shadow-lg  max-h-[calc(100vh-2rem)]">
       {/* Vinyl Record Player */}
-      <div className="relative w-full aspect-square max-w-[300px] mx-auto mb-8">
+      <div className="relative w-full aspect-square max-w-[300px] p-3 mx-auto mb-6">
         {/* Tonearm */}
         <div 
           className={`absolute -right-4 -top-4 w-40 h-40 transition-transform duration-1000 ${
@@ -115,12 +115,11 @@ export function Lyrics({ title, genre, author, date, verses, isPlaying = false, 
       
       {/* Header Section */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">{title}</h2>
-        <div className="text-muted-foreground text-sm">
+        <h2 className="text-2xl text-center font-bold  mx-auto mb-2">{title}</h2>
+        <div className="text-muted-foreground text-sm text-center">
           <span>{genre}</span>
         </div>
         <div className="flex items-center gap-2 mt-2">
-          <span className="text-sm text-muted-foreground">{author}</span>
           <span className="text-sm text-muted-foreground">{date}</span>
         </div>
       </div>

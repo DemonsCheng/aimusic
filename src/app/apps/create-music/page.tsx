@@ -1,3 +1,4 @@
+"use client";
 import { GalleryVerticalEnd, Minus, Plus, Search } from "lucide-react";
 
 import {
@@ -41,8 +42,14 @@ import {
 import MusicForm from "./_components/gen-music-form";
 import Playlist from "../playlist/page";
 import { Lyrics } from "@/components/shared/Lyrics";
+import { SelectMusic } from "@/lib/db/schema";
+import { useState } from 'react';
+import { cn } from "@/lib/utils";
 
 export default function Component() {
+  const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 pt-0 min-h-screen w-full">
       <ResizablePanelGroup direction="horizontal" className="flex-1">
@@ -54,95 +61,36 @@ export default function Component() {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50} maxSize={60} minSize={40}>
           <div className="h-full bg-muted/50 rounded-xl p-4">
-          <Playlist />
+            <Playlist 
+              onSongSelect={setCurrentSong} 
+              onPlayingChange={setIsPlaying}
+            />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={15} minSize={15} maxSize={25}>
-          <div className="h-full bg-muted/50 rounded-xl p-4">
-            <Lyrics
-              title="Furry Friends"
-              genre="playful, pop"
-              author="JovialNocturnes0685"
-              date="2024年12月2日 15:17"
-              isPlaying={false}
-              coverImage="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              verses={`[Verse]
-                In the morning light they wake me
-                Tiny paws a gentle plea
-                We chase the sun and greet the day
-                With a wag and a playful tray
-
-                In the morning light they wake me
-                Tiny paws a gentle plea
-                We chase the sun and greet the day
-                With a wag and a playful tray
-
-                [Verse 2]
-                In the park we run carefree
-                Tongues out grinning wide and free
-                Find a stick and make it fly
-                Catch it right up in the sky
-
-                [Chorus]
-                They bark they purr they meow
-                Furry friends forever now
-                Through the highs and through the lows
-                By our side love always shows
-
-                In the morning light they wake me
-                Tiny paws a gentle plea
-                We chase the sun and greet the day
-                With a wag and a playful tray
-
-                [Verse 2]
-                In the park we run carefree
-                Tongues out grinning wide and free
-                Find a stick and make it fly
-                Catch it right up in the sky
-
-                [Chorus]
-                They bark they purr they meow
-                Furry friends forever now
-                Through the highs and through the lows
-                By our side love always shows
-
-                In the morning light they wake me
-                Tiny paws a gentle plea
-                We chase the sun and greet the day
-                With a wag and a playful tray
-
-                [Verse 2]
-                In the park we run carefree
-                Tongues out grinning wide and free
-                Find a stick and make it fly
-                Catch it right up in the sky
-
-                [Chorus]
-                They bark they purr they meow
-                Furry friends forever now
-                Through the highs and through the lows
-                By our side love always shows
-
-                [Verse 2]
-                In the park we run carefree
-                Tongues out grinning wide and free
-                Find a stick and make it fly
-                Catch it right up in the sky
-
-                [Chorus]
-                They bark they purr they meow
-                Furry friends forever now
-                Through the highs and through the lows
-                By our side love always shows`}
-                />
+        <ResizablePanel defaultSize={15} minSize={15} maxSize={20}>
+          <div className={cn(
+            "h-full  rounded-xl p-2",
+            !currentSong && "flex items-center justify-center"
+          )}>
+            {currentSong ? (
+              <Lyrics
+                title={currentSong.title || ""}
+                genre={currentSong.style || ""}
+                author={currentSong.userId || ""}
+                date={currentSong.created_at || ""}
+                isPlaying={isPlaying}
+                coverImage={currentSong.image_url || ""}
+                verses={currentSong.lyric || ""}
+              />
+            ) : (
+              <div className="text-center text-muted-foreground">
+                <p>Select a song to view lyrics</p>
+              </div>
+            )}
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-
-      {/* <div className="sm:w-[400px] flex-shrink-0 bg-muted/50 rounded-xl p-4">
-        <Playlist />
-      </div> */}
     </div>
   );
 }
