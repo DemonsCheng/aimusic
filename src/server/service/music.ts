@@ -16,3 +16,4 @@ export async function createMusic(music: InsertMusic){
 
     return result
 }
+
