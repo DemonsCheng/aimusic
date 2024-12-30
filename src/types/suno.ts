@@ -38,7 +38,7 @@ export interface SunoCallbackResponse{
 }
 
 
-export interface SunoItemResponse{
+export interface SunoMusicResponse{
   id: string,
   title: string,
   image_url: string,

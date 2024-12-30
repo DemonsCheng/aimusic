@@ -43,10 +43,25 @@ import MusicForm from "./_components/gen-music-form";
 import Playlist from "../playlist/page";
 import { Lyrics } from "@/components/shared/Lyrics";
 import { SelectMusic } from "@/lib/db/schema";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from "@/lib/utils";
 
 export default function Component() {
+  const [songs, setSongs] = useState<SelectMusic[]>([]);
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      const response = await fetch("https://localhost:3000/api/music", {
+        method: "GET",
+      });
+      const { data } = await response.json();
+      setSongs(data || []);
+    };
+    fetchSongs();
+  }, []);
+
+
+
   const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -55,13 +70,14 @@ export default function Component() {
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={35} minSize={20} maxSize={30}>
           <div className="h-full bg-muted/50 rounded-xl p-4">
-            <MusicForm />
+            <MusicForm setSongs={setSongs} songs={songs} />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50} maxSize={60} minSize={40}>
           <div className="h-full bg-muted/50 rounded-xl p-4">
             <Playlist 
+              songs={songs}
               onSongSelect={setCurrentSong} 
               onPlayingChange={setIsPlaying}
             />

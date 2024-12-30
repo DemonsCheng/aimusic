@@ -135,4 +135,4 @@ export const musicTable = pgTable("music", {
 });
 
 export type InsertMusic = typeof musicTable.$inferInsert;
-
+export type SelectMusic = typeof musicTable.$inferSelect;

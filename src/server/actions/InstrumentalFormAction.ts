@@ -43,7 +43,8 @@ import { auth } from "@/lib/auth/authConfig";
       model: "chirp-v4",
       // callback_url: callback_url,
       custom: false,
-      instrumental: true
+      instrumental: true,
+
     };
 
     const options = {
@@ -64,6 +65,7 @@ import { auth } from "@/lib/auth/authConfig";
       trace_id?: string,
       data?:SunoMusicResponse[],
     };
+    console.log("data", data);
     if (!data.success) {
       return parseServerActionResponse({
         error: data.trace_id,
@@ -135,8 +137,8 @@ import { auth } from "@/lib/auth/authConfig";
     
 
     return parseServerActionResponse({
+      code:1,
       data: data,
-      error: "",
       status: "SUCCESS",
     });
      //TODO：扣除用户积分

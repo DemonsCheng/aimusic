@@ -1,8 +1,15 @@
 "use server";
 
 import { z } from "zod"
-import { NormalFormSchema}  from "@/schemas";
+import {InstrumentalFormSchema, NormalFormSchema}  from "@/schemas";
 import { SunoRequest } from "@/types/suno";
+import { createTask } from '@/server/service/task';
+import { checkIsAuthenticated } from "@/lib/auth/checkIsAuthenticated";
+import { parseServerActionResponse } from "@/lib/utils";
+import { SunoMusicResponse } from "@/types/suno";
+import { createMusic } from "../service/music";
+import { auth } from "@/lib/auth/authConfig";
+import { fallbackModeToFallbackField } from "next/dist/lib/fallback";
 
 //   // 2. Define a submit handler.
 //   export async  function onSubmitNormalForm(values: z.infer<typeof NormalFormSchema>) {
@@ -15,38 +22,129 @@ import { SunoRequest } from "@/types/suno";
     // values: z.infer<typeof InstrumentalFormSchema>
     values: z.infer<typeof NormalFormSchema>
   ) {
+    const isAuthenticated = await checkIsAuthenticated();
+    const session = await auth();
+    const userId = session?.user?.id
+
+    if (!isAuthenticated)
+      return parseServerActionResponse({
+        error: "Not signed in",
+        status: "ERROR",
+      });
+
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log("Action:", values);
     const {lyrics, musicStyle, title} = values;
     const t_id =  crypto.randomUUID();
-    const callback_url = `http://openapi.aisongen.com:8090/api/gen-music-callback?t_id=${t_id}`;
+    // const callback_url = `http://openapi.aisongen.com:8090/api/gen-music-callback?t_id=${t_id}`;
     const sunoRequest: SunoRequest = {
-      lyric: lyrics,
-      style: musicStyle,
-      title: title,
+      // prompt: description,
       action: "generate",
       model: "chirp-v4",
-      callback_url: callback_url,
+      // callback_url: callback_url,
       custom: true,
-      instrumental: false
+      instrumental: false,
+      lyric: lyrics,
+      style: musicStyle,
+      title
     };
 
-    fetch("http://localhost:3000/api/gen-music", {
-      method: 'POST',
+    const options = {
+      method: "post",
       headers: {
-        'Content-Type': 'application/json'
-        // Add other headers as needed
+        "authorization": "Bearer "+ process.env.SUNO_API_KEY,
+        "content-type": "application/json"
       },
-      body: JSON.stringify(sunoRequest) // Convert data to JSON string
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
+      timeout: 1200000,
+      body: JSON.stringify(sunoRequest)
+    };
+
+    const response = await fetch("https://api.acedata.cloud/suno/audios", options);
+   
+    const data = await response.json() as {
+      success: boolean,
+      task_id?: string,
+      trace_id?: string,
+      data?:SunoMusicResponse[],
+    };
+     console.log("response data", data);
+    if (!data.success) {
+      return parseServerActionResponse({
+        error: data.trace_id,
+        status: "ERROR",
+      });
+    }
+    let taskId = "";
+    if (data?.task_id) {
+      taskId = data.task_id;
+      console.log("taskId", taskId);
+      console.log("data", data);
+      console.log("musiclist" , data.data);
+    }
+
+    // 保存任务信息
+    // 上传music到R2
+    const task = {
+      userId: "Demons",
+      t_id: t_id,
+      task_id: taskId,
+      model: sunoRequest.model,
+      action: sunoRequest.action,
+      LLM_Params: JSON.stringify(sunoRequest),
+      status: "pending",
+    }
+    const {rowCount} = await createTask(task);
+    if (rowCount === 0) {
+      return  parseServerActionResponse({
+        success:false,
+        message:"create music failed",
+      });
+    }
+
+    const musicList = data.data;
+    // 保存音乐到数据库
+    if (musicList?.length !== 0) {
+     musicList?.map(async (music) => {
+      const { id, audio_url, image_url, video_url, duration, lyric  , prompt, title, style, model, state } = music;
+      const musicInfo = {
+        suno_id: id,
+        userId: userId,
+        taskId: taskId,
+        lyric,
+        audio_url,
+        image_url,
+        video_url,
+        duration,
+        state,
+        prompt,
+        title,
+        style,
+        model,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      const { rowCount } = await createMusic({
+        ...musicInfo,
+        userId: userId ?? "",
+        suno_id: id,
+      });
+      if (rowCount === 0) {
+        console.error(`create music ${id} failed`);
+      }
     });
+  }
+   
+    
+    
+    
+
+    return parseServerActionResponse({
+      data: musicList,
+      error: "",
+      status: "SUCCESS",
+    });
+     //TODO：扣除用户积分
     
   }
 

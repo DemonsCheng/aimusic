@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -35,6 +35,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { handleInstrumentalForm } from "@/server/actions/InstrumentalFormAction";
+import { handleNormalForm } from "@/server/actions/NormalFormAction";
+import { SelectMusic } from "@/lib/db/schema";
 
 const instrumentalFormSchema = z.object({
   description: z
@@ -75,7 +77,12 @@ const normalFormSchema = z.object({
     }),
 });
 
-export default function MusicForm() {
+interface MusicFormProps {
+  songs: SelectMusic[];
+  setSongs: Dispatch<SetStateAction<SelectMusic[]>>;
+}
+
+export default function MusicForm({setSongs}: MusicFormProps) {
   // 1. Define your form.
   const normalForm = useForm<z.infer<typeof normalFormSchema>>({
     resolver: zodResolver(normalFormSchema),
@@ -94,10 +101,21 @@ export default function MusicForm() {
   });
 
   // 2. Define a submit handler.
-  function onSubmitNormalForm(values: z.infer<typeof normalFormSchema>) {
+  async function onSubmitNormalForm(values: z.infer<typeof normalFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const result = await handleNormalForm(values);
+    console.log("result", result);
+    const {code,data} = await result.json();
+    if (code === 1) {
+      data.map((song: SelectMusic) => {
+        setSongs((songs: SelectMusic[]) => [
+          song,
+          ...songs,
+        ]);
+      });
+    }
   }
 
   async function  onSubmitInstrumentalForm(
@@ -108,6 +126,16 @@ export default function MusicForm() {
     console.log(values);
     const result = await handleInstrumentalForm(values);
     console.log("result", result);
+    const {code,data} = await result.json();
+    if (code === 1) {
+      data.map((song: SelectMusic) => {
+        setSongs((songs: SelectMusic[]) => [
+          song,
+          ...songs,
+        ]);
+      });
+    }
+   
   }
 
   return (
@@ -129,7 +157,7 @@ export default function MusicForm() {
                   name="lyrics"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>MusicStyle</FormLabel>
+                      <FormLabel>Lyrics</FormLabel>
                       <FormControl>
                         <Textarea
                           id="lyrics"
