@@ -43,7 +43,7 @@ import MusicForm from "./_components/gen-music-form";
 import Playlist from "../playlist/page";
 import { Lyrics } from "@/components/shared/Lyrics";
 import { SelectMusic } from "@/lib/db/schema";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export default function Component() {
@@ -60,8 +60,6 @@ export default function Component() {
     fetchSongs();
   }, []);
 
-
-
   const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -76,19 +74,21 @@ export default function Component() {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50} maxSize={60} minSize={40}>
           <div className="h-full bg-muted/50 rounded-xl p-4">
-            <Playlist 
+            <Playlist
               songs={songs}
-              onSongSelect={setCurrentSong} 
+              onSongSelect={setCurrentSong}
               onPlayingChange={setIsPlaying}
             />
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={15} minSize={15} maxSize={20}>
-          <div className={cn(
-            "h-full  rounded-xl p-2",
-            !currentSong && "flex items-center justify-center"
-          )}>
+          <div
+            className={cn(
+              "h-full  rounded-xl p-2",
+              !currentSong && "flex items-center justify-center"
+            )}
+          >
             {currentSong ? (
               <Lyrics
                 title={currentSong.title || ""}

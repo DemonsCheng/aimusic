@@ -26,8 +26,8 @@ export default function Features() {
     <div className=" mx-auto ">
       <LandingFeatureList
         withBackgroundGlow
-        // backgroundGlowVariant="primary"
-        // variant="secondary"
+        backgroundGlowVariant="primary"
+        variant="secondary"
         title={"Nothing quite like it."}
         description={
           "Shipixen sets up everything you need to start working on your blog, website or product."

@@ -1,5 +1,6 @@
 "use client";
 import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -46,7 +47,8 @@ const instrumentalFormSchema = z.object({
     })
     .max(200, {
       message: "description must be at least 200 characters.",
-    }),
+    })
+    .default(""),
 });
 
 const normalFormSchema = z.object({
@@ -57,7 +59,8 @@ const normalFormSchema = z.object({
     })
     .max(2000, {
       message: "lyrics must be at least 2000 characters.",
-    }),
+    })
+    .default(""),
 
   musicStyle: z
     .string()
@@ -66,7 +69,8 @@ const normalFormSchema = z.object({
     })
     .max(120, {
       message: "Style must be at least 120 characters.",
-    }),
+    })
+    .default(""),
   title: z
     .string()
     .min(1, {
@@ -74,7 +78,8 @@ const normalFormSchema = z.object({
     })
     .max(120, {
       message: "title must be at least 120 characters.",
-    }),
+    })
+    .default(""),
 });
 
 interface MusicFormProps {
@@ -82,7 +87,32 @@ interface MusicFormProps {
   setSongs: Dispatch<SetStateAction<SelectMusic[]>>;
 }
 
-export default function MusicForm({setSongs}: MusicFormProps) {
+export default function MusicForm({ setSongs }: MusicFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Progress simulation function
+  const simulateProgress = () => {
+    setProgress(0);
+    setLoading(true);
+
+    const duration = 60000; // 60 seconds total
+    const interval = 1000; // Update every second
+    const incrementPerInterval = 95 / (duration / interval); // Go up to 95% gradually
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) {
+          clearInterval(timer);
+          return 95;
+        }
+        return Math.min(95, prev + incrementPerInterval);
+      });
+    }, interval);
+
+    return timer;
+  };
+
   // 1. Define your form.
   const normalForm = useForm<z.infer<typeof normalFormSchema>>({
     resolver: zodResolver(normalFormSchema),
@@ -102,40 +132,60 @@ export default function MusicForm({setSongs}: MusicFormProps) {
 
   // 2. Define a submit handler.
   async function onSubmitNormalForm(values: z.infer<typeof normalFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    const result = await handleNormalForm(values);
-    console.log("result", result);
-    const {code,data} = await result.json();
-    if (code === 1) {
-      data.map((song: SelectMusic) => {
-        setSongs((songs: SelectMusic[]) => [
-          song,
-          ...songs,
-        ]);
-      });
+    const progressTimer = simulateProgress();
+
+    try {
+      const result = await handleNormalForm(values);
+      const response = await result;
+      const { code, data } = await response.json();
+
+      if (code === 1) {
+        data.map((song: SelectMusic) => {
+          setSongs((songs: SelectMusic[]) => [song, ...songs]);
+        });
+        // Complete the progress bar
+        setProgress(100);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      // Clear the timer and reset states after a delay
+      setTimeout(() => {
+        clearInterval(progressTimer);
+        setLoading(false);
+        setProgress(0);
+      }, 1000);
     }
   }
 
-  async function  onSubmitInstrumentalForm(
+  async function onSubmitInstrumentalForm(
     values: z.infer<typeof instrumentalFormSchema>
   ) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    const result = await handleInstrumentalForm(values);
-    console.log("result", result);
-    const {code,data} = await result.json();
-    if (code === 1) {
-      data.map((song: SelectMusic) => {
-        setSongs((songs: SelectMusic[]) => [
-          song,
-          ...songs,
-        ]);
-      });
+    const progressTimer = simulateProgress();
+
+    try {
+      const result = await handleInstrumentalForm(values);
+      console.log("sumit data", result.data);
+      console.log("sumit code", result.code);
+      const songs = result.data;
+
+      if (result.code === 1) {
+        songs.map((song: SelectMusic) => {
+          setSongs((songs: SelectMusic[]) => [song, ...songs]);
+        });
+        // Complete the progress bar
+        setProgress(100);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      // Clear the timer and reset states after a delay
+      setTimeout(() => {
+        clearInterval(progressTimer);
+        setLoading(false);
+        setProgress(0);
+      }, 1000);
     }
-   
   }
 
   return (
@@ -157,11 +207,10 @@ export default function MusicForm({setSongs}: MusicFormProps) {
                   name="lyrics"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Lyrics</FormLabel>
+                      <FormLabel htmlFor="lyrics">Lyrics</FormLabel>
                       <FormControl>
                         <Textarea
                           id="lyrics"
-                          defaultValue=""
                           placeholder="Enter your own lyrics or describe a song and click Generate Lyrics..."
                           maxLength={2000}
                           rows={4}
@@ -181,11 +230,10 @@ export default function MusicForm({setSongs}: MusicFormProps) {
                   name="musicStyle"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Style of Music</FormLabel>
+                      <FormLabel htmlFor="musicStyle">Style of Music</FormLabel>
                       <FormControl>
                         <Textarea
                           id="musicStyle"
-                          defaultValue=""
                           placeholder="Enter style of music"
                           maxLength={120}
                           rows={4}
@@ -205,11 +253,10 @@ export default function MusicForm({setSongs}: MusicFormProps) {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel htmlFor="title">Title</FormLabel>
                       <FormControl>
                         <Input
-                          id="Title"
-                          defaultValue=""
+                          id="title"
                           placeholder="Enter title of music"
                           maxLength={120}
                           {...field}
@@ -223,7 +270,23 @@ export default function MusicForm({setSongs}: MusicFormProps) {
                   )}
                 />
 
-                <Button className="cursor-pointer" size="xl" variant="primary" type="submit">Create</Button>
+                <Button
+                  className="cursor-pointer"
+                  size="xl"
+                  variant="primary"
+                  type="submit"
+                  disabled={normalForm.formState.isSubmitting}
+                >
+                  {normalForm.formState.isSubmitting ? "Creating..." : "Create"}
+                </Button>
+                {loading && (
+                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-4">
+                    <div
+                      className="h-full bg-primary transition-all duration-200 ease-in-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
               </form>
             </Form>
           </CardContent>
@@ -244,27 +307,44 @@ export default function MusicForm({setSongs}: MusicFormProps) {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel htmlFor="description">Description</FormLabel>
                       <FormControl>
                         <Textarea
                           id="description"
-                          defaultValue=""
-                          placeholder="Enter your own lyrics or describe a song and click Generate Lyrics..."
+                          placeholder="Describe the instrumental music you want to create..."
                           maxLength={200}
                           rows={4}
                           {...field}
                         />
                       </FormControl>
                       <FormDescription>
-                        This is your public display name.
+                        Describe the instrumental music you want
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="flex items-center justify-center">
-                  <Button className="cursor-pointer" size="xl" variant="primary" type="submit">Create</Button>
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <Button
+                    className="cursor-pointer"
+                    size="xl"
+                    variant="primary"
+                    type="submit"
+                    disabled={instrumentalForm.formState.isSubmitting}
+                  >
+                    {instrumentalForm.formState.isSubmitting
+                      ? "Creating..."
+                      : "Create"}
+                  </Button>
+                  {loading && (
+                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-200 ease-in-out"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
               </form>
             </Form>

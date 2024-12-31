@@ -138,7 +138,7 @@ import { auth } from "@/lib/auth/authConfig";
 
     return parseServerActionResponse({
       code:1,
-      data: data,
+      data: musicList,
       status: "SUCCESS",
     });
      //TODO：扣除用户积分

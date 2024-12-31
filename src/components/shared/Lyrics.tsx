@@ -119,8 +119,8 @@ export function Lyrics({ title, genre, author, date, verses, isPlaying = false, 
         <div className="text-muted-foreground text-sm text-center">
           <span>{genre}</span>
         </div>
-        <div className="flex items-center gap-2 mt-2">
-          <span className="text-sm text-muted-foreground">{date}</span>
+        <div className="flex items-center gap-2 mt-2 ">
+          <span className="text-sm mx-auto text-center text-muted-foreground">{date}</span>
         </div>
       </div>
 

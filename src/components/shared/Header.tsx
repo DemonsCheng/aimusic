@@ -7,6 +7,7 @@ import ThemeSwitch from "./ThemeSwitch";
 import ActiveLink from "@/components/shared/ActiveLink";
 import Image from "next/image";
 import { LoginButton } from "../auth/login-button";
+import Logo from "@/components/icons/Logo";
 
 const Header = () => {
   return (
@@ -15,15 +16,15 @@ const Header = () => {
         <Link href="/" aria-label={siteConfig.logoTitle}>
           <div className="flex items-center gap-3 justify-between">
             <Image
-              src="/static/images/logo.png"
-              alt="Pricing Page Generator logo"
+              src="/logo.webp"
+              alt="AI Song generator logo"
               height={74}
               width={74}
               className="group-hover:animate-wiggle relative top-0.5"
             />
 
             <div className="hidden text-2xl font-semibold sm:flex h-full">
-              Pricing Page Generator
+              AI Song generator
             </div>
           </div>
         </Link>
@@ -55,7 +56,7 @@ const Header = () => {
         {/* <SearchButton /> */}
         <ThemeSwitch />
         <MobileNav />
-        <LoginButton >Login</LoginButton>
+        <LoginButton>Login</LoginButton>
       </div>
     </header>
   );

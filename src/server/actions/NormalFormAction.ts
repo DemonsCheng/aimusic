@@ -141,8 +141,8 @@ import { fallbackModeToFallbackField } from "next/dist/lib/fallback";
 
     return parseServerActionResponse({
       data: musicList,
-      error: "",
       status: "SUCCESS",
+      code: 1,
     });
      //TODO：扣除用户积分
     
