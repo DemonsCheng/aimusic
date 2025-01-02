@@ -44,11 +44,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { Icons } from "@/components/icons";
+import Image from "next/image";
 
 export const company = {
-  name: "Acme Inc",
-  logo: GalleryVerticalEnd,
-  plan: "Enterprise",
+  name: "AISongen",
+  // logo: GalleryVerticalEnd,
 };
 
 export default function AppSidebar() {
@@ -60,17 +60,21 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground ">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <company.logo className="size-4" />
+          <Image
+              src="/logo.webp"
+              alt="AI Song generator logo"
+              height={74}
+              width={74}
+              className="group-hover:animate-wiggle relative top-0.5"
+            />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
-            <span className="truncate text-xs">{company.plan}</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
-          <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;

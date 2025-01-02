@@ -10,17 +10,17 @@ export const navItems: NavItem[] = [
       items: [] // Empty array as there are no child items for Dashboard
     },
     {
-      title: 'Employee',
-      url: '/dashboard/employee',
-      icon: 'user',
+      title: 'AI Song Generator',
+      url: '/ai-song-generator', // Placeholder as there is no direct link for the parent 'AI Song Generator',
+      icon: 'music',
       shortcut: ['e', 'e'],
       isActive: false,
       items: [] // No child items
     },
     {
-      title: 'Product',
-      url: '/dashboard/product',
-      icon: 'product',
+      title: 'Playlist',
+      url: '/playlist',
+      icon: 'listMusic',
       shortcut: ['p', 'p'],
       isActive: false,
       items: [] // No child items
@@ -45,13 +45,5 @@ export const navItems: NavItem[] = [
           icon: 'login'
         }
       ]
-    },
-    {
-      title: 'Kanban',
-      url: '/dashboard/kanban',
-      icon: 'kanban',
-      shortcut: ['k', 'k'],
-      isActive: false,
-      items: [] // No child items
     }
   ];

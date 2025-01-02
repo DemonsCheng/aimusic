@@ -270,15 +270,17 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
                   )}
                 />
 
-                <Button
-                  className="cursor-pointer"
-                  size="xl"
-                  variant="primary"
-                  type="submit"
-                  disabled={normalForm.formState.isSubmitting}
-                >
-                  {normalForm.formState.isSubmitting ? "Creating..." : "Create"}
-                </Button>
+                <div className="flex flex-col items-center justify-center">
+                  <Button
+                    className="cursor-pointer "
+                    size="xl"
+                    variant="primary"
+                    type="submit"
+                    disabled={normalForm.formState.isSubmitting}
+                  >
+                    {normalForm.formState.isSubmitting ? "Creating..." : "Create"}
+                  </Button>
+                </div>
                 {loading && (
                   <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-4">
                     <div

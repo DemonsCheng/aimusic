@@ -1,20 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PlaylistItem } from "./_components/playlist-item";
 import { SelectMusic } from "@/lib/db/schema";
+import { Icons } from "@/components/icons";
 import { MusicPlayer } from "@/components/music-player";
 
 interface PlaylistProps {
   onSongSelect?: (song: SelectMusic | undefined) => void;
   onPlayingChange?: (isPlaying: boolean) => void;
   songs: SelectMusic[];
+
 }
 
 export default function Playlist({ onSongSelect, onPlayingChange, songs }: PlaylistProps) {
+  
   const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
   const [isPlaying, setIsPlaying] = useState(false);
+
+
 
   const handleSongClick = (song: SelectMusic) => {
     if (currentSong?.id === song.id) {

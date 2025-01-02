@@ -13,7 +13,6 @@ interface PlaylistItemProps {
   index: number;
   onClick?: () => void;
   isPlaying?: boolean;
-  onPlayPause: () => void;
 }
 
 export function PlaylistItem({
@@ -21,7 +20,6 @@ export function PlaylistItem({
   index,
   onClick,
   isPlaying,
-  onPlayPause,
 }: PlaylistItemProps) {
   const handleDownload = async () => {
     if (song.audio_url) {
