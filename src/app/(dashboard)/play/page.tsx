@@ -1,53 +1,34 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PlaylistItem } from "./_components/playlist-item";
 import { SelectMusic } from "@/lib/db/schema";
 import { Icons } from "@/components/icons";
-import { MusicPlayer } from "@/components/music-player";
+import { useMusicStore } from "@/store/music-store";
 
 interface PlaylistProps {
-  onSongSelect?: (song: SelectMusic | undefined) => void;
-  onPlayingChange?: (isPlaying: boolean) => void;
   songs: SelectMusic[];
-
 }
 
-export default function Playlist({ onSongSelect, onPlayingChange, songs }: PlaylistProps) {
-  
-  const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
-  const [isPlaying, setIsPlaying] = useState(false);
-
-
+export default function Playlist({ songs }: PlaylistProps) {
+  const { currentSong, isPlaying, setCurrentSong, setIsPlaying } = useMusicStore();
 
   const handleSongClick = (song: SelectMusic) => {
     if (currentSong?.id === song.id) {
-      const newIsPlaying = !isPlaying;
-      setIsPlaying(newIsPlaying);
-      onPlayingChange?.(newIsPlaying);
+      setIsPlaying(!isPlaying);
     } else {
       setCurrentSong(song);
       setIsPlaying(true);
-      onSongSelect?.(song);
-      onPlayingChange?.(true);
     }
-  };
-
-  const handleClosePlayer = () => {
-    setCurrentSong(undefined);
-    setIsPlaying(false);
-    onSongSelect?.(undefined);
-    onPlayingChange?.(false);
   };
 
   return (
     <>
       <div className="h-screen w-full p-1 pb-28">
-        <div className=" mx-auto">
+        <div className="mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">PlayList</h2>
-            
           </div>
           
           <ScrollArea className="h-[calc(100vh-180px)]">
@@ -69,14 +50,6 @@ export default function Playlist({ onSongSelect, onPlayingChange, songs }: Playl
           </ScrollArea>
         </div>
       </div>
-      {currentSong && (
-        <MusicPlayer 
-          currentSong={currentSong} 
-          onClose={handleClosePlayer}
-          isPlaying={isPlaying}
-          onPlayPause={setIsPlaying}
-        />
-      )}
     </>
   );
 }

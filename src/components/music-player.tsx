@@ -16,15 +16,38 @@ interface MusicPlayerProps {
 export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: MusicPlayerProps) {
   const [volume, setVolume] = useState(100);
   const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (currentSong?.audio_url) {
+      setIsLoading(true);
       if (audioRef.current) {
         audioRef.current.src = currentSong.audio_url;
-        if (isPlaying) {
-          audioRef.current.play();
-        }
+        audioRef.current.load();
+        
+        const handleCanPlay = () => {
+          setIsLoading(false);
+          if (isPlaying) {
+            const playPromise = audioRef.current?.play();
+            if (playPromise !== undefined) {
+              playPromise.catch((error) => {
+                console.log("Playback was interrupted:", error);
+                onPlayPause(false);
+              });
+            }
+          }
+        };
+
+        audioRef.current.addEventListener('canplay', handleCanPlay);
+        
+        return () => {
+          audioRef.current?.removeEventListener('canplay', handleCanPlay);
+          audioRef.current?.pause();
+          if (audioRef.current) {
+            audioRef.current.src = "";
+          }
+        };
       }
     }
   }, [currentSong]);
@@ -32,7 +55,13 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.play();
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.log("Playback was interrupted:", error);
+            onPlayPause(false);
+          });
+        }
       } else {
         audioRef.current.pause();
       }
@@ -79,9 +108,15 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => onPlayPause(false)}
+        preload="auto"
       />
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[60%] bg-white border-t h-20 z-[100] shadow-lg rounded-t-lg">
         <div className="h-full flex items-center justify-between relative px-6">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50">
+              <Icons.spinner className="w-6 h-6 animate-spin" />
+            </div>
+          )}
           {/* Close Button */}
           <button 
             onClick={onClose}

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { SelectMusic } from "@/lib/db/schema";
 import { Icons } from "@/components/icons";
@@ -21,6 +21,24 @@ export function PlaylistItem({
   onClick,
   isPlaying,
 }: PlaylistItemProps) {
+  const preloadAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleMouseEnter = () => {
+    if (!preloadAudioRef.current && song.audio_url) {
+      preloadAudioRef.current = new Audio(song.audio_url);
+      preloadAudioRef.current.preload = "metadata";
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preloadAudioRef.current) {
+        preloadAudioRef.current.src = "";
+        preloadAudioRef.current = null;
+      }
+    };
+  }, []);
+
   const handleDownload = async () => {
     if (song.audio_url) {
       try {
@@ -48,6 +66,7 @@ export function PlaylistItem({
         isPlaying && "bg-gray-50"
       )}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
     >
       <div className="w-8 relative">
         <span

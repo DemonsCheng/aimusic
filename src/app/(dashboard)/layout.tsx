@@ -5,6 +5,9 @@ import Header from "@/components/layout/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { MusicPlayerWrapper } from "@/components/music-player-wrapper";
+import { MusicPlayer } from "@/components/music-player";
+import { useMusicStore } from "@/store/music-store";
 
 export const metadata: Metadata = {
   title: "Next Shadcn Dashboard Starter",
@@ -20,14 +23,38 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const defaultOpen =  cookieStore.get("sidebar:state")?.value === "true";
   return (
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <AppSidebar />
-        <SidebarInset>
-          <Header />
-          {/* page main content */}
-          {children}
-          {/* page main content ends */}
-        </SidebarInset>
-      </SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <AppSidebar />
+      <SidebarInset>
+        <Header />
+        {/* page main content */}
+        {children}
+        {/* page main content ends */}
+      </SidebarInset>
+      <MusicPlayerWrapper />
+    </SidebarProvider>
+  );
+}
+
+// Client component for music player to avoid hydration issues
+function ClientMusicPlayer() {
+  'use client';
+  
+  const { currentSong, isPlaying, setCurrentSong, setIsPlaying } = useMusicStore();
+
+  const handleClose = () => {
+    setCurrentSong(undefined);
+    setIsPlaying(false);
+  };
+
+  if (!currentSong) return null;
+
+  return (
+    <MusicPlayer
+      currentSong={currentSong}
+      onClose={handleClose}
+      isPlaying={isPlaying}
+      onPlayPause={setIsPlaying}
+    />
   );
 }

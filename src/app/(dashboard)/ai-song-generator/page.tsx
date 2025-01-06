@@ -11,9 +11,11 @@ import { Lyrics } from "@/components/shared/Lyrics";
 import { SelectMusic } from "@/lib/db/schema";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useMusicStore } from "@/store/music-store";
 
 export default function Component() {
   const [songs, setSongs] = useState<SelectMusic[]>([]);
+  const { currentSong, isPlaying } = useMusicStore();
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -26,9 +28,6 @@ export default function Component() {
     fetchSongs();
   }, []);
 
-  const [currentSong, setCurrentSong] = useState<SelectMusic | undefined>();
-  const [isPlaying, setIsPlaying] = useState(false);
-
   return (
     <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-4 pt-0 min-h-screen w-full">
       <div className="block lg:hidden w-full">
@@ -36,11 +35,7 @@ export default function Component() {
           <MusicForm setSongs={setSongs} songs={songs} />
         </div>
         <div className="bg-muted/50 rounded-xl p-4 mb-4">
-          <Playlist
-            songs={songs}
-            onSongSelect={setCurrentSong}
-            onPlayingChange={setIsPlaying}
-          />
+          <Playlist songs={songs} />
         </div>
         <div className={cn(
           "bg-muted/50 rounded-xl p-2",
@@ -72,11 +67,7 @@ export default function Component() {
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={50} maxSize={60} minSize={40}>
             <div className="h-full bg-muted/50 rounded-xl p-4">
-              <Playlist
-                songs={songs}
-                onSongSelect={setCurrentSong}
-                onPlayingChange={setIsPlaying}
-              />
+              <Playlist songs={songs} />
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
