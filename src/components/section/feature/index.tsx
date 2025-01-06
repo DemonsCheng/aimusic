@@ -27,7 +27,7 @@ export default function Features() {
       <LandingFeatureList
         withBackgroundGlow
         backgroundGlowVariant="primary"
-        variant="secondary"
+        variant="primary"
         title={"Nothing quite like it."}
         description={
           "Shipixen sets up everything you need to start working on your blog, website or product."

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import styles from "@/components/section/pricing/pricing.module.css";
+import styles from "./pricing.module.css";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,6 @@ export interface PricingTier {
 export const frequencies: PricingTierFrequency[] = [
   { id: "1", value: "1", label: "Monthly", priceSuffix: "/month" },
   { id: "2", value: "2", label: "Annually", priceSuffix: "/year" },
-  { id: "3", value: "3", label: "One-time", priceSuffix: "" },
 ];
 
 export const tiers: PricingTier[] = [
@@ -39,16 +38,16 @@ export const tiers: PricingTier[] = [
     name: "Free",
     id: "0",
     href: "/subscribe",
-    price: { "1": "$9.9", "2": "$7.9", "3": "" },
-    discountPrice: { "1": "", "2": "", "3": "" },
+    price: { "1": "$0", "2": "$0" },
+    discountPrice: { "1": "", "2": "" },
     description: `Get all goodies for free, no credit card required.`,
     features: [
       `Multi-platform compatibility`,
       `Real-time notification system`,
       `Advanced user permissions`,
     ],
-    featured: true,
-    highlighted: true,
+    featured: false,
+    highlighted: false,
     soldOut: false,
     cta: `Sign up`,
   },
@@ -56,8 +55,8 @@ export const tiers: PricingTier[] = [
     name: "Pro",
     id: "1",
     href: "/subscribe",
-    price: { "1": "$3.99", "2": "$49.99", "3": "" },
-    discountPrice: { "1": "", "2": "", "3": "" },
+    price: { "1": "$3.99", "2": "$49.99" },
+    discountPrice: { "1": "", "2": "" },
     description: `When you grow, need more power and flexibility.`,
     features: [
       `All in the free plan plus`,
@@ -73,8 +72,8 @@ export const tiers: PricingTier[] = [
     name: "Scaler",
     id: "2",
     href: "/contact-us",
-    price: { "1": "$14.99", "2": "$179.88", "3": "" },
-    discountPrice: { "1": "", "2": "", "3": "" },
+    price: { "1": "$14.99", "2": "$179.88" },
+    discountPrice: { "1": "", "2": "" },
     description: `When you grow, need more power and flexibility.`,
     features: [
       `All in the pro plan plus`,
@@ -82,7 +81,7 @@ export const tiers: PricingTier[] = [
       `Enterprise-grade security`,
     ],
     featured: true,
-    highlighted: false,
+    highlighted: true,
     soldOut: false,
     cta: `Get started`,
   },
@@ -105,7 +104,7 @@ const CheckIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export default function Pricing() {
+export default function PricingPage() {
   const [frequency, setFrequency] = useState(frequencies[0]);
 
   const bannerText = "";
@@ -124,7 +123,7 @@ export default function Pricing() {
 
           {bannerText ? (
             <div className="w-full lg:w-auto flex justify-center my-4">
-              <p className="w-full px-4 py-3 text-xs bg-sky-100 text-black dark:bg-sky-300/30 dark:text-white/80 rounded-xl">
+              <p className="w-full px-4 py-3 text-xs bg-pink-100 text-black dark:bg-pink-300/30 dark:text-white/80 rounded-xl">
                 {bannerText}
               </p>
             </div>
@@ -147,8 +146,8 @@ export default function Pricing() {
                   <Label
                     className={cn(
                       frequency.value === option.value
-                        ? "bg-sky-500/90 text-white dark:bg-sky-900/70 dark:text-white/70"
-                        : "bg-transparent text-gray-500 hover:bg-sky-500/10",
+                        ? "bg-pink-500/90 text-white dark:bg-pink-900/70 dark:text-white/70"
+                        : "bg-transparent text-gray-500 hover:bg-pink-500/10",
                       "cursor-pointer rounded-full px-2.5 py-2 transition-all"
                     )}
                     key={option.value}
@@ -265,7 +264,7 @@ export default function Pricing() {
                       "w-full text-black dark:text-white",
                       !tier.highlighted && !tier.featured
                         ? "bg-gray-100 dark:bg-gray-600"
-                        : "bg-sky-300 hover:bg-sky-400 dark:bg-sky-600 dark:hover:bg-sky-700",
+                        : "bg-pink-300 hover:bg-pink-400 dark:bg-pink-600 dark:hover:bg-pink-700",
                       tier.featured || tier.soldOut
                         ? "bg-white dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-black"
                         : "hover:opacity-80 transition-opacity"
@@ -289,7 +288,7 @@ export default function Pricing() {
                       <CheckIcon
                         className={cn(
                           tier.featured ? "text-white dark:text-black" : "",
-                          tier.highlighted ? "text-sky-500" : "text-gray-500",
+                          tier.highlighted ? "text-pink-500" : "text-gray-500",
 
                           "h-6 w-5 flex-none"
                         )}

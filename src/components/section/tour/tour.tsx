@@ -13,8 +13,6 @@ export default function Tour() {
         title="Landing page in minutes"
         description="Get 10x more done with Shadcn UI, React & Next.js, and say goodbye to repetitive tasks. You'll never go back."
         defaultValue="feature-1"
-        withBackground
-        variant="secondary"
       >
         <LandingProductTourList>
           <LandingProductTourTrigger value="feature-1">

@@ -30,10 +30,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  
+
   return (
     <html lang="en">
-      <body className={`${baseFont.variable} ${displayFont.variable} font-sans antialiased`}>
+      <body
+        className={`${baseFont.variable} ${displayFont.variable} font-sans antialiased`}
+      >
         <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"

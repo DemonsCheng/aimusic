@@ -1,5 +1,5 @@
 /* Configure colors at https://shipixen.com/color-theme-explorer-shadcn */
-export const colors = {
+const colors = {
   primary: {
     lighter: "#f675a7",
     light: "#f45196",
@@ -15,3 +15,5 @@ export const colors = {
     darker: "#4d7c0f",
   },
 };
+
+module.exports = { colors };

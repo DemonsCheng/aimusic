@@ -7,7 +7,6 @@ import ThemeSwitch from "./ThemeSwitch";
 import ActiveLink from "@/components/shared/ActiveLink";
 import Image from "next/image";
 import { LoginButton } from "../auth/login-button";
-import Logo from "@/components/icons/Logo";
 
 const Header = () => {
   return (
