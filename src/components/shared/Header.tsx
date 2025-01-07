@@ -39,9 +39,14 @@ const Header = () => {
                 className="group-hover:animate-wiggle relative top-0.5"
               />
 
+<<<<<<< HEAD
               <div className="hidden text-xl font-semibold md:flex h-full">
                 AI Song generator
               </div>
+=======
+            <div className="hidden text-2xl font-semibold sm:flex h-full">
+              AISongen.com
+>>>>>>> be8ac2f7d0a7eddbbda756781e1fe8738cc766cf
             </div>
           </Link>
         </div>

@@ -8,22 +8,18 @@ export default function CATs() {
       <LandingSaleCtaSection
         withBackground
         withBackgroundGlow
-        title="Ready to get started?"
+        title="Unleash Your Musical Genius"
         description="Pre-order today and get a 50% discount on the final price for the first 3 months. No credit card required."
       >
         <Button size="xl" asChild>
-          <a href="#">Buy Now</a>
+          <a href="#">Start Creating Free</a>
         </Button>
 
-        <Button size="xl" variant="outlineSecondary">
-          <a href="#">Learn More</a>
-        </Button>
-
-        <LandingDiscount
+        {/* <LandingDiscount
           className="w-full"
           discountValueText="$350 off"
           discountDescriptionText="for the first 10 customers (2 left)"
-        />
+        /> */}
       </LandingSaleCtaSection>
     </>
   );
