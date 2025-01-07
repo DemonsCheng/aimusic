@@ -23,7 +23,7 @@ const Header = () => {
             />
 
             <div className="hidden text-2xl font-semibold sm:flex h-full">
-              AI Song generator
+              AISongen.com
             </div>
           </div>
         </Link>

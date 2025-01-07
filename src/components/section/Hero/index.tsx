@@ -10,21 +10,21 @@ export default function Hero() {
   return (
     <>
       <LandingPrimaryImageCtaSection
-        title="Landing page in minutes"
-        description="Get 10x more done with Shadcn UI, React & Next.js, and say goodbye to repetitive tasks. You'll never go back."
+        title="AI Song Generator"
+        description="Transform Your Ideas into Professional Music with our AI Song Generator - Just Pure Creativity"
         imageSrc="/static/images/shipixen/product/1.webp"
         imageAlt="Sample image"
         withBackground
         withBackgroundGlow
-        leadingComponent={<LandingProductHuntAward />}
+        // leadingComponent={<LandingProductHuntAward />}
       >
         <Button size="xl" asChild>
-          <a href="#">Buy now</a>
+          <a href="#">Try now</a>
         </Button>
 
-        <Button size="xl" variant="outlinePrimary">
+        {/* <Button size="xl" variant="outlinePrimary">
           <a href="#">Read more</a>
-        </Button>
+        </Button> */}
 
         <LandingSocialProof
           className="w-full mt-12"

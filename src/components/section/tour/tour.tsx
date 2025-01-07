@@ -10,29 +10,44 @@ export default function Tour() {
   return (
     <>
       <LandingProductTourSection
-        title="Landing page in minutes"
-        description="Get 10x more done with Shadcn UI, React & Next.js, and say goodbye to repetitive tasks. You'll never go back."
+        title="How to Use AI Song Generator"
+        description="Effortless to use, fast to create—AI Song Generator brings your musical ideas to life!"
         defaultValue="feature-1"
       >
         <LandingProductTourList>
           <LandingProductTourTrigger value="feature-1">
-            <p className="text-xl font-bold">Automatic deployment to Vercel</p>
+            <p className="text-xl font-bold">Get Started Quickly</p>
             <p>
-              Deploying the generated template to Vercel is as easy as clicking
-              a button.
+              Choose a Song Style: Select your preferred genre, such as pop,
+              rock, or electronic.
+            </p>
+            <p>
+              Input Your Ideas: Provide lyrics, keywords, or short phrases, and
+              the AI will create melodies based on your input.
             </p>
           </LandingProductTourTrigger>
 
           <LandingProductTourTrigger value="feature-2">
-            <p className="text-xl font-bold">MDX blog, no server required</p>
-            <p>Shipixen comes with a fully featured MDX blog.</p>
+            <p className="text-xl font-bold">Personalize Your Song</p>
+            <p>
+              Adjust Tempo and Mood: Choose the pace and emotional tone (e.g.,
+              happy, sad, or energetic).
+            </p>
+            <p>Customize Lyrics: Edit the lyrics to suit your taste.</p>
+            <p>
+              Refine Your Song: Generate and tweak multiple times until you're
+              satisfied with the result.
+            </p>
           </LandingProductTourTrigger>
 
           <LandingProductTourTrigger value="feature-3">
-            <p className="text-xl font-bold">Customizable themes</p>
+            <p className="text-xl font-bold">Save and Share</p>
             <p>
-              Choose from more than 30+ beautifully designed themes or create
-              your own.
+              Download Your Music: Export your song as a high-quality audio file
+            </p>
+            <p>
+              Share Your Creation: Publish directly to social media and share
+              your music with friends and fans.
             </p>
           </LandingProductTourTrigger>
         </LandingProductTourList>

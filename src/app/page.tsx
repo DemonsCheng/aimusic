@@ -9,6 +9,7 @@ import Pricing from "@/components/section/pricing";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import Tour from "@/components/section/tour/tour";
+import UseCase from "@/components/landing/usecase/UseCase";
 
 export default function Home() {
   return (
@@ -19,9 +20,10 @@ export default function Home() {
       {/* </div> */}
 
       <Hero />
-      <Tour />
       <Features />
+      <Tour />
 
+      <UseCase />
       <Pricing />
       <Testimonials />
       <FAQs />
