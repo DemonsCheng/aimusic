@@ -63,12 +63,12 @@ export default function AppSidebar() {
           <Image
               src="/logo.webp"
               alt="AI Song generator logo"
-              height={74}
-              width={74}
+              height={50}
+              width={50}
               className="group-hover:animate-wiggle relative top-0.5"
             />
           </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
+          <div className="grid flex-1 mt-2 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
           </div>
         </div>

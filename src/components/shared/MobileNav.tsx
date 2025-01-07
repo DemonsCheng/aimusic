@@ -24,7 +24,7 @@ const MobileNav = () => {
       <button
         aria-label="Toggle Menu"
         onClick={onToggleNav}
-        className="sm:hidden"
+        className="md:hidden"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
