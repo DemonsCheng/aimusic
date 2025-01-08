@@ -24,10 +24,14 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm' : 'bg-white dark:bg-gray-900'
-    }`}>
-      <div className="flex items-center justify-between py-2 flex-wrap w-full max-w-7xl mx-auto mb-1 lg:mb-1 pt-2 px-4">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm' : 'bg-white dark:bg-gray-900'
+      }`}
+    >
+      <div
+        className="flex items-center justify-between py-2 flex-wrap w-full max-w-7xl mx-auto mb-1 lg:mb-1 pt-2 px-4"
+      >
         <div>
           <Link href="/" aria-label={siteConfig.logoTitle}>
             <div className="flex items-center gap-3 justify-between">
@@ -38,15 +42,9 @@ const Header = () => {
                 width={50}
                 className="group-hover:animate-wiggle relative top-0.5"
               />
-
-<<<<<<< HEAD
               <div className="hidden text-xl font-semibold md:flex h-full">
                 AI Song generator
               </div>
-=======
-            <div className="hidden text-2xl font-semibold sm:flex h-full">
-              AISongen.com
->>>>>>> be8ac2f7d0a7eddbbda756781e1fe8738cc766cf
             </div>
           </Link>
         </div>
@@ -61,18 +59,18 @@ const Header = () => {
               <span>{link.title}</span>
             </ActiveLink>
           ))}
-
           <a
             key="download"
             href="/ai-song-generator"
             target="_self"
             className="nav-link hidden md:block"
           >
-            <span className="bg-clip-text bg-gradient-to-r text-transparent from-fuchsia-500 to-cyan-600 dark:from-fuchsia-500 dark:to-cyan-500">
+            <span
+              className="bg-clip-text bg-gradient-to-r text-transparent from-fuchsia-500 to-cyan-600 dark:from-fuchsia-500 dark:to-cyan-500"
+            >
               AI Song Generator
             </span>
           </a>
-
           {/* <SearchButton /> */}
           <ThemeSwitch />
           <MobileNav />

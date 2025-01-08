@@ -94,7 +94,7 @@ export function PlaylistItem({
       <div className="flex-1 ml-4 text-left">
         <p
           className={cn(
-            "text-sm font-medium text-gray-900",
+            "text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600",
             isPlaying && "text-blue-600"
           )}
         >
