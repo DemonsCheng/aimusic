@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { SunoCallbackResponse } from "@/types/suno";
 import { updateTask } from "@/server/service/task";
 
-export const runtime = "edge";
-
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ t_id: string }> }

@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import AppSidebar from "@/components/layout/app-sidebar";
 import Header from "@/components/layout/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -21,7 +19,7 @@ export default async function DashboardLayout({
 }) {
   // Persisting the sidebar state in the cookie.
   const cookieStore = await cookies();
-  const defaultOpen =  cookieStore.get("sidebar:state")?.value === "true";
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
@@ -38,9 +36,10 @@ export default async function DashboardLayout({
 
 // Client component for music player to avoid hydration issues
 function ClientMusicPlayer() {
-  'use client';
-  
-  const { currentSong, isPlaying, setCurrentSong, setIsPlaying } = useMusicStore();
+  "use client";
+
+  const { currentSong, isPlaying, setCurrentSong, setIsPlaying } =
+    useMusicStore();
 
   const handleClose = () => {
     setCurrentSong(undefined);
