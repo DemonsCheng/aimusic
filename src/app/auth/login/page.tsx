@@ -1,5 +1,4 @@
 import Login from "@/components/auth/login";
-import { LoginForm } from "@/components/auth/login-form";
 import { checkIsAuthenticated } from "@/lib/auth/checkIsAuthenticated";
 import { redirect } from "next/navigation";
 
@@ -15,5 +14,7 @@ const LoginPage = async () => {
     );
   }
 };
+
+export const dynamic = "force-dynamic";
 
 export default LoginPage;
