@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 import { redirect } from "next/navigation";
 import { checkIsAuthenticated } from "@/lib/auth/checkIsAuthenticated";
 

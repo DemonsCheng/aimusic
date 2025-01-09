@@ -37,10 +37,12 @@ export default function Component() {
         <div className="bg-muted/50 rounded-xl p-4 mb-4">
           <Playlist songs={songs} />
         </div>
-        <div className={cn(
-          "bg-muted/50 rounded-xl p-2",
-          !currentSong && "flex items-center justify-center"
-        )}>
+        <div
+          className={cn(
+            "bg-muted/50 rounded-xl p-2",
+            !currentSong && "flex items-center justify-center"
+          )}
+        >
           {currentSong ? (
             <Lyrics
               title={currentSong.title || ""}
@@ -52,7 +54,9 @@ export default function Component() {
               verses={currentSong.lyric || ""}
             />
           ) : (
-            <p className="text-muted-foreground">Select a song to view lyrics</p>
+            <p className="text-muted-foreground">
+              Select a song to view lyrics
+            </p>
           )}
         </div>
       </div>
@@ -72,10 +76,12 @@ export default function Component() {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={15} minSize={15} maxSize={20}>
-            <div className={cn(
-              "h-full bg-muted/50 rounded-xl p-2",
-              !currentSong && "flex items-center justify-center"
-            )}>
+            <div
+              className={cn(
+                "h-full bg-muted/50 rounded-xl p-2",
+                !currentSong && "flex items-center justify-center"
+              )}
+            >
               {currentSong ? (
                 <Lyrics
                   title={currentSong.title || ""}
@@ -87,7 +93,9 @@ export default function Component() {
                   verses={currentSong.lyric || ""}
                 />
               ) : (
-                <p className="text-muted-foreground">Select a song to view lyrics</p>
+                <p className="text-muted-foreground">
+                  Select a song to view lyrics
+                </p>
               )}
             </div>
           </ResizablePanel>
