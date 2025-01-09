@@ -6,7 +6,6 @@ import { SelectMusic } from "@/lib/db/schema";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { FaCloudDownloadAlt } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
 
 interface PlaylistItemProps {
   song: SelectMusic;

@@ -1,10 +1,14 @@
 import { db } from "@/lib/db";
-import { taskTable ,InsertTask} from "@/lib/db/schema";
+import { taskTable, InsertTask } from "@/lib/db/schema";
 
+export async function createTask(task: InsertTask) {
+  const result = db.insert(taskTable).values(task);
 
+  return result;
+}
 
-export async function createTask(task: InsertTask){
-    const result =  db.insert(taskTable).values(task);
+export async function updateTask(task: InsertTask) {
+  const result = db.insert(taskTable).values(task);
 
-    return result
+  return result;
 }
