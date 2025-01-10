@@ -21,12 +21,13 @@ const baseFont = Inter({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icons/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
   },
   title:
-    "AI Song Generator|Create Professional Music in Seconds|Free Online Tool",
+    "AI Song Generator|Create Professional Music|Free Online",
   description:
-    "Transform your ideas into studio-quality songs with our AI Song Generator. Create custom lyrics, melodies, and professional arrangements instantly. Try our free online music creation tool - No musical expertise required!",
+    "Transform your ideas into studio-quality songs with our AI Song Generator.Create custom lyrics, melodies, and songs instantly.Try free AI song generator tool!",
 };
 
 export default async function RootLayout({

@@ -19,7 +19,7 @@ export default function Hero() {
         // leadingComponent={<LandingProductHuntAward />}
       >
         <Button size="xl" asChild>
-          <a href="#">Try now</a>
+          <a href="/ai-song-generator">Try now</a>
         </Button>
 
         {/* <Button size="xl" variant="outlinePrimary">

@@ -60,15 +60,18 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground ">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-          <Image
+            <a href="/">
+            <Image
               src="/logo.webp"
               alt="AI Song generator logo"
               height={50}
               width={50}
               className="group-hover:animate-wiggle relative top-0.5"
             />
+            </a>
           </div>
           <div className="grid flex-1 mt-2 text-left text-sm leading-tight">
+            
             <span className="truncate font-semibold">{company.name}</span>
           </div>
         </div>
@@ -201,10 +204,7 @@ export default function AppSidebar() {
                     <CreditCard />
                     Billing
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
-                  </DropdownMenuItem>
+          
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>

@@ -12,7 +12,7 @@ export default function CATs() {
         description="Pre-order today and get a 50% discount on the final price for the first 3 months. No credit card required."
       >
         <Button size="xl" asChild>
-          <a href="#">Start Creating Free</a>
+          <a href="/ai-song-generator">Start Creating Free</a>
         </Button>
 
         {/* <LandingDiscount

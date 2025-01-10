@@ -1,4 +1,4 @@
-import { SparklesIcon, LineChartIcon, LayersIcon } from "lucide-react";
+import { SparklesIcon, Music, Infinity  } from "lucide-react";
 import { LandingFeatureList } from "@/components/landing/feature/LandingFeatureList";
 
 const featureItems = [
@@ -12,13 +12,13 @@ const featureItems = [
     title: "Universal Music Access",
     description:
       "Create without limits - no musical training required. Our intuitive platform empowers everyone to compose, whether you're a beginner or professional musician.",
-    icon: <LineChartIcon />,
+    icon: <Music />,
   },
   {
     title: "Creative Freedom Guarantee",
     description:
       "Full creative control with customization options, and 100% royalty-free music that's yours to own and use commercially. ",
-    icon: <LayersIcon />,
+    icon: <Infinity  />,
   },
 ];
 

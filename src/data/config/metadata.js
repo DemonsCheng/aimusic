@@ -21,7 +21,7 @@ const metadata = {
   facebook: "",
   threads: "",
   mastodon: "",
-  author: "Shipixen",
+  author: "",
   language: "en-us",
   theme: "system",
   locale: "en-US",
