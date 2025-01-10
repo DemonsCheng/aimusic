@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import mdx from "@next/mdx";
 
 const nextConfig: NextConfig = {
   images: {
@@ -20,6 +21,24 @@ const nextConfig: NextConfig = {
   },
 
   /* config options here */
+
+  // Configure `pageExtensions` to include markdown and MDX files
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
-export default nextConfig;
+const withMDX = mdx({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+// Make sure experimental mdx flag is enabled
+const configWithMDX = {
+  ...nextConfig,
+  experimental: {
+    mdxRs: true,
+  },
+};
+
+// Merge MDX config with Next.js config
+export default withMDX(configWithMDX);

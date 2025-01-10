@@ -1,11 +1,11 @@
-const { metadata } = require('./metadata');
+const { metadata } = require("./metadata");
 
 /** @typedef {import("siteSettingsInterface.ts").SiteConfig } */
 const siteConfig = {
   ...metadata,
 
-  blogPath: '', // The location of all blog pages under 'data'. Empty string means 'data' (default). Best for SEO is to have articles under the root path.
-  allArticlesPath: '/all-articles', // The name of the page where you can see a list of all articles (needs to match app/all-articles/page.tsx)
+  blogPath: "", // The location of all blog pages under 'data'. Empty string means 'data' (default). Best for SEO is to have articles under the root path.
+  allArticlesPath: "/all-articles", // The name of the page where you can see a list of all articles (needs to match app/all-articles/page.tsx)
 
   // Configure analytics
   disableAnalytics: false, // Disable all analytics on the site

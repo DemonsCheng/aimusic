@@ -40,15 +40,15 @@ export default function Footer({ className }: { className?: string }) {
             <Link href="/" aria-label={siteConfig.title}>
               <div className="flex items-center gap-3 justify-start">
                 <Image
-                  src="/static/images/logo.png"
-                  alt="Pricing Page Generator logo"
+                  src="/logo.webp"
+                  alt="AI Song Generator logo"
                   height={46}
                   width={46}
                   className="group-hover:animate-wiggle "
                 />
 
                 <div className="hidden text-2xl font-semibold sm:flex h-full">
-                  Pricing Page Generator
+                  AI Song Generator
                 </div>
               </div>
             </Link>
@@ -63,7 +63,9 @@ export default function Footer({ className }: { className?: string }) {
               <p className="text-sm opacity-70">{siteConfig.description}</p>
             ) : null}
 
-            <p className="text-xs">Copyright © {siteConfig.businessName}</p>
+            <p className="text-xs">
+              © 2025 {siteConfig.businessName} All rights reserved.
+            </p>
           </div>
 
           <div
@@ -123,7 +125,7 @@ export default function Footer({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <hr
           className="w-full my-4 border-0 bg-gradient-to-r from-white/5 via-black/10 to-white/5 dark:from-black/5 dark:via-white/30 darK:to-black/5"
           style={{ height: "1px" }}
@@ -225,7 +227,7 @@ export default function Footer({ className }: { className?: string }) {
             <Link href="https://shipixen.com">Shipixen</Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 }

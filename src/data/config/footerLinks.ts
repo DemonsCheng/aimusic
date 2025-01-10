@@ -1,13 +1,17 @@
 export const footerLinks = [
   {
-    columnName: 'Read more',
+    columnName: "Company",
     links: [
-      { href: '/', title: 'Home' },
-      { href: '/about', title: 'About' },
-      { href: 'https://shipixen.com', title: 'Next.js Starter' },
+      { href: "/terms-and-conditions", title: "Terms and Conditions" },
+      { href: "/refund-policy", title: "Refund Policy" },
+      { href: "/privacy-policy", title: "Privacy Policy" },
+      {
+        href: "mailto:support@aisongen.com",
+        title: "Contact Us",
+      },
     ],
   },
-  { columnName: 'Product', links: [] },
-  { columnName: 'Docs', links: [] },
-  { columnName: 'Support', links: [] },
+  { columnName: "Product", links: [] },
+  { columnName: "Docs", links: [] },
+  { columnName: "Support", links: [] },
 ];

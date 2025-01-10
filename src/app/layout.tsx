@@ -20,6 +20,9 @@ const baseFont = Inter({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/favicon.ico",
+  },
   title:
     "AI Song Generator|Create Professional Music in Seconds|Free Online Tool",
   description:
