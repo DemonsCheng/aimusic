@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
+    "@aws-sdk/client-s3": "^3.726.1",
+    "@aws-sdk/s3-request-presigner": "^3.726.1",
     "@hookform/resolvers": "^3.9.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
@@ -57,6 +59,7 @@
     "framer-motion": "^11.14.4",
     "input-otp": "^1.4.1",
     "lucide-react": "^0.468.0",
+    "nanoid": "^5.0.9",
     "next": "15.1.0",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^3.26.1",

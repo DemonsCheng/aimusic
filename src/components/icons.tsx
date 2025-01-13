@@ -39,7 +39,8 @@ import {
   X,
   Music,
   ListMusic,
-} from 'lucide-react';
+  Music2,
+} from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -73,6 +74,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   music: Music,
+  music2: Music2,
   heart: Heart,
   pause: Pause,
   play: Play,

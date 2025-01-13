@@ -8,11 +8,10 @@ import {
   serial,
   varchar,
   doublePrecision,
-} from "drizzle-orm/pg-core"
-import type { AdapterAccountType } from "next-auth/adapters"
-import { number } from "zod"
- 
- 
+} from "drizzle-orm/pg-core";
+import type { AdapterAccountType } from "next-auth/adapters";
+import { number } from "zod";
+
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -21,8 +20,8 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-})
- 
+});
+
 export const accounts = pgTable(
   "account",
   {
@@ -45,16 +44,16 @@ export const accounts = pgTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
- 
+);
+
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
-})
- 
+});
+
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -67,8 +66,8 @@ export const verificationTokens = pgTable(
       columns: [verificationToken.identifier, verificationToken.token],
     }),
   })
-)
- 
+);
+
 export const authenticators = pgTable(
   "authenticator",
   {
@@ -88,12 +87,7 @@ export const authenticators = pgTable(
       columns: [authenticator.userId, authenticator.credentialID],
     }),
   })
-)
-
-
-
-
-
+);
 
 export const taskTable = pgTable("task", {
   id: serial("id").primaryKey(),
@@ -109,10 +103,9 @@ export const taskTable = pgTable("task", {
   status: text("status").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
-}); 
+});
 
 export type InsertTask = typeof taskTable.$inferInsert;
-
 
 export const musicTable = pgTable("music", {
   id: serial("id").primaryKey(),
@@ -130,8 +123,14 @@ export const musicTable = pgTable("music", {
   state: text("state"),
   duration: doublePrecision("duration"),
   remark: text("remark"),
-  created_at: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
-  updated_at: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
+  created_at: timestamp("created_at", { mode: "string" })
+    .notNull()
+    .defaultNow(),
+  updated_at: timestamp("updated_at", { mode: "string" })
+    .notNull()
+    .defaultNow(),
+  suno_audio_id: text("suno_audio_id"),
+  status: text("status").notNull().default("pending"),
 });
 
 export type InsertMusic = typeof musicTable.$inferInsert;
