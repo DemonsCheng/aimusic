@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { nanoid } from "nanoid";
 
@@ -45,13 +49,13 @@ export class R2Storage {
       await this.client.send(putCommand);
 
       // 生成公开访问URL
-      const getCommand = new PutObjectCommand({
+      const getCommand = new GetObjectCommand({
         Bucket: this.BUCKET_NAME,
         Key: fileName,
       });
 
       const url = await getSignedUrl(this.client, getCommand, {
-        expiresIn: 31536000, // 1年过期
+        expiresIn: 60 * 60 * 24, // 一天过期
       });
 
       return url;

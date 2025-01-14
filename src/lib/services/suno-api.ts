@@ -1,5 +1,3 @@
-import { env } from "@/env.mjs";
-
 interface SunoUploadResponse {
   success: boolean;
   task_id: string;
@@ -11,51 +9,91 @@ interface SunoUploadResponse {
 interface SunoGenerateResponse {
   success: boolean;
   task_id: string;
-  data: {
-    track_id: string;
+  trace_id: string;
+  error?: {
+    code: string;
+    message: string;
   };
+  data: Array<{
+    id: string;
+    title: string;
+    image_url: string;
+    lyric: string;
+    audio_url: string;
+    video_url: string;
+    created_at: string;
+    model: string;
+    state: "succeeded" | "failed";
+    prompt: string | null;
+    style: string;
+    duration: number;
+  }>;
 }
 
-interface SunoTaskStatusResponse {
-  success: boolean;
-  data: {
-    status: "pending" | "processing" | "completed" | "failed";
-    result?: {
-      audio_url: string;
-      duration: number;
-    };
+interface SunoTaskResponse {
+  _id: string;
+  id: string;
+  api_id: string;
+  application_id: string;
+  created_at: number;
+  credential_id: string;
+  request: {
+    action: string;
+    model: string;
+    custom: boolean;
+    instrumental: boolean;
+    title: string;
+    prompt: string | null;
+    lyric: string;
+    style: string;
+    audio_id: string;
+    callback_url: string;
   };
+  trace_id: string;
+  user_id: string;
+  response: SunoGenerateResponse;
 }
 
 interface GenerateMusicParams {
   action: string;
   model: string;
-  custom: boolean;
-  instrumental: boolean;
-  title: string;
   prompt: string;
-  lyric: string;
-  audio_id: string;
+  lyric?: string;
+  custom?: boolean;
+  instrumental?: boolean;
+  title?: string;
+  style?: string;
+  style_negative?: string;
+  audio_id?: string;
+  persona_id?: string;
+  continue_at?: number;
+  callback_url: string;
 }
 
 export class SunoAPI {
   private static readonly BASE_URL = "https://api.acedata.cloud/suno";
-  private static readonly TOKEN = env.SUNO_API_TOKEN;
+  private static readonly SUNO_API_CALLBACK_URL =
+    process.env.SUNO_API_CALLBACK_URL;
 
-  static async uploadReferenceAudio(audioUrl: string): Promise<string> {
+  static async uploadReferenceAudio(
+    audioUrl: string
+  ): Promise<SunoGenerateResponse> {
     try {
+      const token = process.env.SUNO_API_KEY;
       const response = await fetch(`${this.BASE_URL}/upload`, {
         method: "POST",
         headers: {
-          accept: "application/json",
-          authorization: `Bearer ${this.TOKEN}`,
+          authorization: `Bearer ${token}`,
           "content-type": "application/json",
         },
         body: JSON.stringify({ audio_url: audioUrl }),
       });
 
       if (!response.ok) {
-        throw new Error(`Suno API error: ${response.statusText}`);
+        const error = await response.json();
+        throw new Error(
+          `Suno API error: ${response.statusText} - ${JSON.stringify(error)}`
+        );
       }
 
       const data = (await response.json()) as SunoUploadResponse;
@@ -72,25 +110,35 @@ export class SunoAPI {
   }
 
   static async generateMusic(params: GenerateMusicParams): Promise<string> {
+    const token = process.env.SUNO_API_KEY;
     try {
-      const response = await fetch(`${this.BASE_URL}/generate`, {
+      const response = await fetch(`${this.BASE_URL}/audios`, {
         method: "POST",
         headers: {
-          accept: "application/json",
-          authorization: `Bearer ${this.TOKEN}`,
+          accept: "application/x-ndjson",
+          authorization: `Bearer ${token}`,
           "content-type": "application/json",
         },
         body: JSON.stringify(params),
       });
 
       if (!response.ok) {
-        throw new Error(`Suno API error: ${response.statusText}`);
+        const error = await response.json();
+        throw new Error(
+          `API error: ${response.statusText} - ${JSON.stringify(error)}`
+        );
       }
 
       const data = (await response.json()) as SunoGenerateResponse;
+      console.log("Gen Data:", data);
 
-      if (!data.success) {
-        throw new Error("Failed to generate music");
+      if (data.success === false) {
+        const errorMessage = data.error?.message || "Unknown error occurred";
+        throw new Error(`Generation failed: ${errorMessage}`);
+      }
+
+      if (!data.task_id) {
+        throw new Error("No task_id returned from API");
       }
 
       return data.task_id;
@@ -100,27 +148,31 @@ export class SunoAPI {
     }
   }
 
-  static async checkTaskStatus(
-    taskId: string
-  ): Promise<SunoTaskStatusResponse> {
+  static async checkTaskStatus(taskId: string): Promise<SunoTaskResponse> {
+    const token = process.env.SUNO_API_KEY;
     try {
-      const response = await fetch(`${this.BASE_URL}/tasks/${taskId}`, {
-        method: "GET",
+      const response = await fetch(`${this.BASE_URL}/tasks`, {
+        method: "POST",
         headers: {
           accept: "application/json",
-          authorization: `Bearer ${this.TOKEN}`,
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json",
         },
+        body: JSON.stringify({
+          id: taskId,
+          action: "retrieve",
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(`Suno API error: ${response.statusText}`);
+        const error = await response.json();
+        throw new Error(
+          `API error: ${response.statusText} - ${JSON.stringify(error)}`
+        );
       }
 
-      const data = (await response.json()) as SunoTaskStatusResponse;
-
-      if (!data.success) {
-        throw new Error("Failed to check task status");
-      }
+      const data = (await response.json()) as SunoTaskResponse;
+      console.log("Check Data: ", data);
 
       return data;
     } catch (error) {
