@@ -100,24 +100,34 @@ export async function POST(req: Request) {
       });
     }
 
-    // 延时10秒
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    // 轮询检查任务状态，最多重试30次
+    let retryCount = 0;
+    let musicList;
 
-    // 检查任务状态
-    const result = await SunoAPI.checkTaskStatus(task_id);
+    while (retryCount < 10) {
+      // 等待1秒
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    if (result.response?.success === false) {
-      return NextResponse.json({
-        success: false,
-        message: "Failed to check task status",
-      });
+      const result = await SunoAPI.checkTaskStatus(task_id);
+
+      if (result.response?.success === false) {
+        return NextResponse.json({
+          success: false,
+          message: "Failed to check task status",
+        });
+      }
+      musicList = result.response?.data || [];
+      if (musicList && musicList.length > 0) {
+        break;
+      }
+      console.log("retry: ", retryCount);
+      retryCount++;
     }
 
-    const musicList = result.response.data;
     if (!musicList || musicList.length === 0) {
       return NextResponse.json({
         success: false,
-        message: "No music generated",
+        message: "No music generated after retries",
       });
     }
 
