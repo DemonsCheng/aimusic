@@ -1,6 +1,7 @@
 import { SunoAPI } from "@/lib/services/suno-api";
 import { createMusic } from "@/server/service/music";
 import { NextResponse } from "next/server";
+import { respErr } from "@/lib/resp";
 
 export async function GET(req: Request) {
   try {
@@ -12,7 +13,10 @@ export async function GET(req: Request) {
     //   );
     // }
     const formData = await req.formData();
-    const task_id = formData.get("task_id");
+    const task_id = formData.get("task_id") as string;
+    if (!task_id) {
+      return respErr("No task_id provided");
+    }
     const result = await SunoAPI.checkTaskStatus(task_id);
 
     if (result.response?.success === false) {

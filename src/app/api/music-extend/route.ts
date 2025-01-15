@@ -7,6 +7,7 @@ import { randomUUID } from "crypto";
 import { InsertTask } from "@/lib/db/schema";
 import { createTask } from "@/server/service/task";
 import { createMusic } from "@/server/service/music";
+import { respErr, respOk, respData } from "@/lib/resp";
 
 interface SunoMusicResponse {
   data: Array<{
@@ -26,17 +27,11 @@ interface SunoMusicResponse {
 
 export async function POST(req: Request) {
   try {
-    // const session = await auth();
-    // if (!session?.user?.id) {
-    //   return NextResponse.json(
-    //     { error: "Unauthorized", code: 0 },
-    //     { status: 401 }
-    //   );
-    // }
-
+    // Parse request body as JSON instead of FormData
     const formData = await req.formData();
+
     const formType = formData.get("type") as "normal" | "instrumental";
-    const audioFile = formData.get("audioFile") as File | null;
+    const audioFile = formData.get("audioFile") as File;
 
     let uploadedFileUrl = "";
     let sunoAudioId = "";
@@ -44,14 +39,17 @@ export async function POST(req: Request) {
     if (audioFile) {
       try {
         uploadedFileUrl = await R2Storage.uploadAudio(audioFile);
-        console.log("Audio URL: ", uploadedFileUrl);
-        sunoAudioId = await SunoAPI.uploadReferenceAudio(uploadedFileUrl);
+        const response = await SunoAPI.uploadReferenceAudio(uploadedFileUrl);
+        if (!response.success) {
+          throw new Error("Failed to upload audio to Suno");
+        }
+        if (!response.data?.audio_id) {
+          throw new Error("No audio ID returned from Suno");
+        }
+        sunoAudioId = response.data.audio_id;
       } catch (error) {
         console.error("Error uploading file:", error);
-        return NextResponse.json(
-          { error: "Failed to upload file", code: 0 },
-          { status: 500 }
-        );
+        return respErr("Failed to upload file");
       }
     }
 
@@ -61,26 +59,25 @@ export async function POST(req: Request) {
       model: "chirp-v3-5",
       custom: true,
       instrumental: formType === "instrumental",
-      title: (formData.get("title") as string) || "Untitled",
+      title: formData.get("title")?.toString() || "Untitled",
       prompt:
         formType === "normal"
-          ? (formData.get("lyric") as string)
-          : (formData.get("description") as string),
-      lyric: formType === "normal" ? (formData.get("lyrics") as string) : "",
+          ? formData.get("lyrics")?.toString() || ""
+          : formData.get("description")?.toString() || "",
+      lyric:
+        formType === "normal" ? formData.get("lyrics")?.toString() || "" : "",
       style:
-        formType === "normal" ? (formData.get("musicStyle") as string) : "",
+        formType === "normal"
+          ? formData.get("musicStyle")?.toString() || ""
+          : "",
       audio_id: sunoAudioId,
       callback_url: process.env.SUNO_API_CALLBACK_URL + "?t_id=" + uuid,
     };
 
     const task_id = await SunoAPI.generateMusic(generationParams);
-    console.log("Response task_id :", task_id);
 
     if (!task_id) {
-      return NextResponse.json(
-        { error: "Failed to generate music", code: 0 },
-        { status: 500 }
-      );
+      return respErr("Failed to generate music");
     }
     // 保存任务信息
     const task: InsertTask = {
@@ -94,10 +91,7 @@ export async function POST(req: Request) {
     };
     const { rowCount } = await createTask(task);
     if (rowCount === 0) {
-      return NextResponse.json({
-        success: false,
-        message: "create task failed",
-      });
+      return respErr("create task failed");
     }
 
     // 轮询检查任务状态，最多重试30次
@@ -111,25 +105,21 @@ export async function POST(req: Request) {
       const result = await SunoAPI.checkTaskStatus(task_id);
 
       if (result.response?.success === false) {
-        return NextResponse.json({
-          success: false,
-          message: "Failed to check task status",
-        });
+        console.error("Failed to check task status:", result);
+        return respErr("Failed to check task status");
       }
       musicList = result.response?.data || [];
       if (musicList && musicList.length > 0) {
         break;
       }
-      console.log("retry: ", retryCount);
       retryCount++;
     }
 
     if (!musicList || musicList.length === 0) {
-      return NextResponse.json({
-        success: false,
-        message: "No music generated after retries",
-      });
+      return respErr("No music generated after retries");
     }
+
+    console.log("musicList", musicList);
 
     // Save each generated music to database
     for (const music of musicList) {
@@ -151,21 +141,9 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json({
-      data: {
-        musicList,
-      },
-      code: 1,
-      message: "Music generation started",
-    });
+    return respData(musicList);
   } catch (error) {
     console.error("Error processing request:", error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Internal server error",
-        code: 0,
-      },
-      { status: 500 }
-    );
+    return respErr("Internal server error");
   }
 }

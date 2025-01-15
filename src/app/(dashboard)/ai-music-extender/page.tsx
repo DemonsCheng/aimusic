@@ -16,10 +16,11 @@ import { useMusicStore } from "@/store/music-store";
 export default function Component() {
   const [songs, setSongs] = useState<SelectMusic[]>([]);
   const { currentSong, isPlaying } = useMusicStore();
+  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     const fetchSongs = async () => {
-      const response = await fetch("https://localhost:3000/api/music", {
+      const response = await fetch("http://localhost:3000/api/music", {
         method: "GET",
       });
       const { data } = await response.json();
@@ -28,11 +29,55 @@ export default function Component() {
     fetchSongs();
   }, []);
 
+  useEffect(() => {
+    if (refetch) {
+      console.log("Polling started");
+
+      const fetchSongs = async () => {
+        try {
+          const response = await fetch("/api/music", {
+            method: "GET",
+          });
+          const { data } = await response.json();
+          console.log("Fetched songs:", data);
+
+          const hasIncompleteMusic = data?.some(
+            (song: SelectMusic) =>
+              !song.audio_url || song.audio_url.length === 0
+          );
+
+          if (!hasIncompleteMusic) {
+            console.log("All music complete, stopping polling");
+            setRefetch(false);
+          }
+
+          setSongs(data || []);
+        } catch (error) {
+          console.error("Error fetching songs:", error);
+          setRefetch(false);
+        }
+      };
+
+      fetchSongs();
+
+      const interval = setInterval(fetchSongs, 2000);
+
+      return () => {
+        console.log("Cleaning up interval");
+        clearInterval(interval);
+      };
+    }
+  }, [refetch]);
+
   return (
     <div className="flex flex-col lg:flex-row gap-4 p-2 sm:p-4 pt-0 min-h-screen w-full">
       <div className="block lg:hidden w-full">
         <div className="bg-muted/50 rounded-xl p-4 mb-4">
-          <MusicForm setSongs={setSongs} songs={songs} />
+          <MusicForm
+            songs={songs}
+            setSongs={setSongs}
+            setRefetch={setRefetch}
+          />
         </div>
         <div className="bg-muted/50 rounded-xl p-4 mb-4">
           <Playlist songs={songs} />
@@ -65,7 +110,11 @@ export default function Component() {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           <ResizablePanel defaultSize={35} minSize={20} maxSize={30}>
             <div className="h-full bg-muted/50 rounded-xl p-4">
-              <MusicForm setSongs={setSongs} songs={songs} />
+              <MusicForm
+                setSongs={setSongs}
+                songs={songs}
+                setRefetch={setRefetch}
+              />
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />

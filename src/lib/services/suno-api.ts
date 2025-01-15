@@ -6,7 +6,7 @@ interface SunoUploadResponse {
   };
 }
 
-interface SunoGenerateResponse {
+export interface SunoGenerateResponse {
   success: boolean;
   task_id: string;
   trace_id: string;
@@ -14,23 +14,25 @@ interface SunoGenerateResponse {
     code: string;
     message: string;
   };
-  data: Array<{
-    id: string;
-    title: string;
-    image_url: string;
-    lyric: string;
-    audio_url: string;
-    video_url: string;
-    created_at: string;
-    model: string;
-    state: "succeeded" | "failed";
-    prompt: string | null;
-    style: string;
-    duration: number;
-  }>;
+  data: SunoItemResponse[];
 }
 
-interface SunoTaskResponse {
+export interface SunoItemResponse {
+  id: string;
+  title: string;
+  image_url: string;
+  lyric: string;
+  audio_url: string;
+  video_url: string;
+  created_at: string;
+  model: string;
+  state: "succeeded" | "failed";
+  prompt: string | null;
+  style: string;
+  duration: number;
+}
+
+export interface SunoTaskResponse {
   _id: string;
   id: string;
   api_id: string;
@@ -77,7 +79,7 @@ export class SunoAPI {
 
   static async uploadReferenceAudio(
     audioUrl: string
-  ): Promise<SunoGenerateResponse> {
+  ): Promise<SunoUploadResponse> {
     try {
       const token = process.env.SUNO_API_KEY;
       const response = await fetch(`${this.BASE_URL}/upload`, {
@@ -89,20 +91,22 @@ export class SunoAPI {
         body: JSON.stringify({ audio_url: audioUrl }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(
-          `Suno API error: ${response.statusText} - ${JSON.stringify(error)}`
-        );
-      }
+      const data = await response.json();
 
-      const data = (await response.json()) as SunoUploadResponse;
+      if (!response.ok) {
+        if (data.error) {
+          throw new Error(
+            `Suno API error: ${data.error.code} - ${data.error.message}`
+          );
+        }
+        throw new Error(`Suno API error: ${response.statusText}`);
+      }
 
       if (!data.success) {
         throw new Error("Failed to upload audio to Suno");
       }
 
-      return data.data.audio_id;
+      return data;
     } catch (error) {
       console.error("Error uploading to Suno:", error);
       throw error;
@@ -172,9 +176,40 @@ export class SunoAPI {
       }
 
       const data = (await response.json()) as SunoTaskResponse;
-      console.log("Check Data: ", data);
 
       return data;
+    } catch (error) {
+      console.error("Error checking task status:", error);
+      throw error;
+    }
+  }
+
+  static async batchCheckTaskStatus(
+    taskIds: string[]
+  ): Promise<SunoTaskResponse[]> {
+    const token = process.env.SUNO_API_KEY;
+    try {
+      const response = await fetch(`${this.BASE_URL}/tasks`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          ids: taskIds,
+          action: "retrieve_batch",
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          `API error: ${response.statusText} - ${JSON.stringify(error)}`
+        );
+      }
+      const data = (await response.json()) as { items: SunoTaskResponse[] };
+      return data.items;
     } catch (error) {
       console.error("Error checking task status:", error);
       throw error;

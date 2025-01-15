@@ -40,6 +40,7 @@ import { handleNormalForm } from "@/server/actions/NormalFormAction";
 import { SelectMusic } from "@/lib/db/schema";
 import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
+import { respErr } from "@/lib/resp";
 
 const instrumentalFormSchema = z.object({
   description: z
@@ -49,6 +50,15 @@ const instrumentalFormSchema = z.object({
     })
     .max(200, {
       message: "description must be at least 200 characters.",
+    })
+    .default(""),
+  title: z
+    .string()
+    .min(1, {
+      message: "title must be at least 1 characters.",
+    })
+    .max(120, {
+      message: "title must be at least 120 characters.",
     })
     .default(""),
   audioFile: z.instanceof(File).optional(),
@@ -89,9 +99,10 @@ const normalFormSchema = z.object({
 interface MusicFormProps {
   songs: SelectMusic[];
   setSongs: Dispatch<SetStateAction<SelectMusic[]>>;
+  setRefetch: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function MusicForm({ setSongs }: MusicFormProps) {
+export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -132,29 +143,46 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
     resolver: zodResolver(instrumentalFormSchema),
     defaultValues: {
       description: "",
+      title: "",
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmitNormalForm(values: z.infer<typeof normalFormSchema>) {
+  async function onSubmitExtendNormalForm(
+    values: z.infer<typeof normalFormSchema>
+  ) {
     const progressTimer = simulateProgress();
 
     try {
-      const formData = new FormData();
-      formData.append("lyrics", values.lyrics);
-      formData.append("musicStyle", values.musicStyle);
-      formData.append("title", values.title);
-      if (values.audioFile) {
-        formData.append("audioFile", values.audioFile);
-      }
+      const requestData = {
+        lyrics: values.lyrics,
+        musicStyle: values.musicStyle,
+        title: values.title,
+        audioFile: values.audioFile,
+        type: "instrumental",
+      };
 
-      const result = await handleNormalForm(formData);
-      const response = await result;
-      const { code, data } = await response.json();
+      const res = await fetch("/api/music-extend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      const { code, data } = await res.json();
 
-      if (code === 1) {
-        data.map((song: SelectMusic) => {
-          setSongs((songs: SelectMusic[]) => [song, ...songs]);
+      if (code === 0) {
+        const hasAudioUrl = data?.some(
+          (song: SelectMusic) => !song.audio_url || song.audio_url.length === 0
+        );
+
+        if (hasAudioUrl) {
+          setRefetch(true);
+          console.log("Setting refetch to true");
+        }
+
+        data.forEach((song: SelectMusic) => {
+          setSongs((prevSongs) => [song, ...prevSongs]);
         });
         // Complete the progress bar
         setProgress(100);
@@ -172,7 +200,7 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
     }
   }
 
-  async function onSubmitInstrumentalForm(
+  async function onSubmitExtendInstrumentalForm(
     values: z.infer<typeof instrumentalFormSchema>
   ) {
     const progressTimer = simulateProgress();
@@ -180,17 +208,29 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
     try {
       const formData = new FormData();
       formData.append("description", values.description);
+      formData.append("title", values.title);
+      formData.append("type", "instrumental");
       if (values.audioFile) {
         formData.append("audioFile", values.audioFile);
       }
 
-      const result = await handleInstrumentalForm(formData);
-      console.log("sumit data", result.data);
-      console.log("sumit code", result.code);
-      const songs = result.data;
+      const res = await fetch("/api/music-extend", {
+        method: "POST",
+        body: formData,
+      });
+      const { code, data } = await res.json();
+      console.log("123data:", data);
+      console.log("code:", code);
+      if (code === 0) {
+        const hasAudioUrl = data?.every(
+          (song: SelectMusic) => song.audio_url && song.audio_url.length > 0
+        );
+        console.log("hasAudioUrl", hasAudioUrl);
+        if (!hasAudioUrl) {
+          setRefetch(true);
+        }
 
-      if (result.code === 1) {
-        songs.map((song: SelectMusic) => {
+        data.map((song: SelectMusic) => {
           setSongs((songs: SelectMusic[]) => [song, ...songs]);
         });
         // Complete the progress bar
@@ -199,6 +239,7 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
     } catch (error) {
       toast.error("Failed to process the request");
       console.error("Error:", error);
+      return respErr("Failed to process the request");
     } finally {
       // Clear the timer and reset states after a delay
       setTimeout(() => {
@@ -234,7 +275,7 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
           <CardContent className="space-y-2">
             <Form {...normalForm}>
               <form
-                onSubmit={normalForm.handleSubmit(onSubmitNormalForm)}
+                onSubmit={normalForm.handleSubmit(onSubmitExtendNormalForm)}
                 className="space-y-8"
               >
                 <FormField
@@ -361,7 +402,7 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
             <Form {...instrumentalForm}>
               <form
                 onSubmit={instrumentalForm.handleSubmit(
-                  onSubmitInstrumentalForm
+                  onSubmitExtendInstrumentalForm
                 )}
                 className="space-y-8"
               >
@@ -382,6 +423,28 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
                       </FormControl>
                       <FormDescription>
                         Describe the instrumental music you want
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={instrumentalForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="title"
+                          placeholder="Enter title of music"
+                          maxLength={120}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is your public display name.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

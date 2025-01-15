@@ -26,8 +26,17 @@ export class R2Storage {
   static async uploadAudio(file: File): Promise<string> {
     try {
       // 验证文件
-      if (!file.type.startsWith("audio/")) {
-        throw new Error("Invalid file type");
+      // Check if file type exists and is audio
+      // Get file extension from name
+      const fileExt = file.name.split(".").pop()?.toLowerCase();
+      const audioExtensions = ["mp3", "wav", "ogg", "m4a", "aac", "flac"];
+
+      // Check file type from both MIME type and extension
+      const isAudioMime = file.type?.startsWith("audio/");
+      const isAudioExt = audioExtensions.includes(fileExt || "");
+
+      if (!isAudioMime && !isAudioExt) {
+        throw new Error("Invalid file type - must be an audio file");
       }
 
       if (!this.validateFileSize(file, 10)) {
@@ -35,7 +44,7 @@ export class R2Storage {
       }
 
       // 生成唯一文件名
-      const fileExt = file.name.split(".").pop();
+      // const fileExt = file.name.split(".").pop();
       const fileName = `music/${nanoid()}.${fileExt}`;
 
       // 上传文件

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { Icons } from "./icons";
@@ -13,7 +13,12 @@ interface MusicPlayerProps {
   onPlayPause: (playing: boolean) => void;
 }
 
-export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: MusicPlayerProps) {
+export function MusicPlayer({
+  currentSong,
+  onClose,
+  isPlaying,
+  onPlayPause,
+}: MusicPlayerProps) {
   const [volume, setVolume] = useState(100);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +30,7 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
       if (audioRef.current) {
         audioRef.current.src = currentSong.audio_url;
         audioRef.current.load();
-        
+
         const handleCanPlay = () => {
           setIsLoading(false);
           if (isPlaying) {
@@ -39,10 +44,10 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
           }
         };
 
-        audioRef.current.addEventListener('canplay', handleCanPlay);
-        
+        audioRef.current.addEventListener("canplay", handleCanPlay);
+
         return () => {
-          audioRef.current?.removeEventListener('canplay', handleCanPlay);
+          audioRef.current?.removeEventListener("canplay", handleCanPlay);
           audioRef.current?.pause();
           if (audioRef.current) {
             audioRef.current.src = "";
@@ -93,7 +98,7 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const handlePlayPause = () => {
@@ -118,7 +123,7 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
             </div>
           )}
           {/* Close Button */}
-          <button 
+          <button
             onClick={onClose}
             className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-100"
           >
@@ -130,7 +135,7 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
             <Avatar className="h-14 w-14">
               <img
                 src={currentSong.image_url || "/default-album.png"}
-                alt={currentSong.title}
+                alt={currentSong.title || "song"}
                 className="object-cover"
               />
             </Avatar>
@@ -165,7 +170,9 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
             </div>
             <div className="w-full flex items-center space-x-2 mt-2">
               <span className="text-xs text-gray-500">
-                {audioRef.current ? formatTime(audioRef.current.currentTime) : '0:00'}
+                {audioRef.current
+                  ? formatTime(audioRef.current.currentTime)
+                  : "0:00"}
               </span>
               <PlayerSlider
                 value={[progress]}
@@ -175,7 +182,9 @@ export function MusicPlayer({ currentSong, onClose, isPlaying, onPlayPause }: Mu
                 onValueChange={handleProgressChange}
               />
               <span className="text-xs text-gray-500">
-                {audioRef.current ? formatTime(audioRef.current.duration || 0) : '0:00'}
+                {audioRef.current
+                  ? formatTime(audioRef.current.duration || 0)
+                  : "0:00"}
               </span>
             </div>
           </div>

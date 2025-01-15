@@ -9,6 +9,7 @@ import { parseServerActionResponse } from "@/lib/utils";
 import { SunoMusicResponse } from "@/types/suno";
 import { createMusic } from "../service/music";
 import { auth } from "@/lib/auth/authConfig";
+import { respErr } from "@/lib/resp";
 
 //   // 2. Define a submit handler.
 //   export async  function onSubmitNormalForm(values: z.infer<typeof NormalFormSchema>) {
@@ -17,7 +18,7 @@ import { auth } from "@/lib/auth/authConfig";
 //     console.log(values);
 //   }
 
-export async function handleInstrumentalForm(
+export async function handleMusicExtendForm(
   values: z.infer<typeof InstrumentalFormSchema>
 ) {
   const isAuthenticated = await checkIsAuthenticated();
@@ -25,10 +26,7 @@ export async function handleInstrumentalForm(
   const userId = session?.user?.id;
 
   if (!isAuthenticated)
-    return parseServerActionResponse({
-      error: "Not signed in",
-      status: "ERROR",
-    });
+    return parseServerActionResponse(respErr("Not signed in"));
 
   // Do something with the form values.
   // ✅ This will be type-safe and validated.

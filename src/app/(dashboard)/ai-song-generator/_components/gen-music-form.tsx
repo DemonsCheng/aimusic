@@ -49,6 +49,15 @@ const instrumentalFormSchema = z.object({
       message: "description must be at least 200 characters.",
     })
     .default(""),
+  title: z
+    .string()
+    .min(1, {
+      message: "title must be at least 1 characters.",
+    })
+    .max(120, {
+      message: "title must be at least 120 characters.",
+    })
+    .default(""),
 });
 
 const normalFormSchema = z.object({
@@ -85,9 +94,10 @@ const normalFormSchema = z.object({
 interface MusicFormProps {
   songs: SelectMusic[];
   setSongs: Dispatch<SetStateAction<SelectMusic[]>>;
+  setRefetch: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function MusicForm({ setSongs }: MusicFormProps) {
+export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -127,6 +137,7 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
     resolver: zodResolver(instrumentalFormSchema),
     defaultValues: {
       description: "",
+      title: "",
     },
   });
 
@@ -141,6 +152,10 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
 
       if (code === 1) {
         data.map((song: SelectMusic) => {
+          console.log("song info", song);
+          if (song.audio_url && song.audio_url.length === 0) {
+            setRefetch(true);
+          }
           setSongs((songs: SelectMusic[]) => [song, ...songs]);
         });
         // Complete the progress bar
@@ -278,7 +293,9 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
                     type="submit"
                     disabled={normalForm.formState.isSubmitting}
                   >
-                    {normalForm.formState.isSubmitting ? "Creating..." : "Create"}
+                    {normalForm.formState.isSubmitting
+                      ? "Creating..."
+                      : "Create"}
                   </Button>
                 </div>
                 {loading && (
@@ -321,6 +338,28 @@ export default function MusicForm({ setSongs }: MusicFormProps) {
                       </FormControl>
                       <FormDescription>
                         Describe the instrumental music you want
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={instrumentalForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="title">Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="title"
+                          placeholder="Enter title of music"
+                          maxLength={120}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is your public display name.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
