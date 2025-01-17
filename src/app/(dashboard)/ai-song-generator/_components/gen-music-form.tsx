@@ -146,16 +146,26 @@ export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
     const progressTimer = simulateProgress();
 
     try {
-      const result = await handleNormalForm(values);
-      const response = await result;
-      const { code, data } = await response.json();
+      const result = await fetch("/api/gen-music", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const { code, data } = await result.json();
+      const songs = data;
 
-      if (code === 1) {
-        data.map((song: SelectMusic) => {
-          console.log("song info", song);
-          if (song.audio_url && song.audio_url.length === 0) {
-            setRefetch(true);
-          }
+      if (code === 0) {
+        const hasAudioUrl = data?.some(
+          (song: SelectMusic) => !song.audio_url || song.audio_url.length === 0
+        );
+
+        if (hasAudioUrl) {
+          setRefetch(true);
+          console.log("Setting refetch to true");
+        }
+        songs.map((song: SelectMusic) => {
           setSongs((songs: SelectMusic[]) => [song, ...songs]);
         });
         // Complete the progress bar
@@ -179,12 +189,25 @@ export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
     const progressTimer = simulateProgress();
 
     try {
-      const result = await handleInstrumentalForm(values);
-      console.log("sumit data", result.data);
-      console.log("sumit code", result.code);
-      const songs = result.data;
+      const result = await fetch("/api/gen-music", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const { code, data } = await result.json();
+      const songs = data;
 
-      if (result.code === 1) {
+      if (code === 0) {
+        const hasAudioUrl = data?.some(
+          (song: SelectMusic) => !song.audio_url || song.audio_url.length === 0
+        );
+
+        if (hasAudioUrl) {
+          setRefetch(true);
+          console.log("Setting refetch to true");
+        }
         songs.map((song: SelectMusic) => {
           setSongs((songs: SelectMusic[]) => [song, ...songs]);
         });

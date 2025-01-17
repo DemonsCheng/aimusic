@@ -7,21 +7,18 @@ import {
   SunoGenerateResponse,
   SunoItemResponse,
 } from "@/lib/services/suno-api";
-import { respData } from "@/lib/resp";
+import { respData, respErr } from "@/lib/resp";
 
 export async function GET(req: NextRequest) {
-  // const session = await auth();
-  // console.log("session", session);
-  // const userId = session?.user?.id
-  // if (!userId) {
-  //     return Response.json({
-  //         code: -1,
-  //         error: "Not signed in",
-  //     });
-  // }
+  const session = await auth();
+  console.log("session", session);
+  const userId = session?.user?.id;
+  if (!userId) {
+    return respErr("Not signed in");
+  }
   // console.log("userId", userId);
 
-  const userId = "Demons";
+  // const userId = "Demons";
   const musicList = await SelectMusic(userId);
   // musicList.filter((song: SelectMusic) => {
   //   console.log("song", song);
@@ -63,7 +60,7 @@ export async function GET(req: NextRequest) {
     newMusicList.map(async (song: SunoItemResponse) => {
       if (song.audio_url) {
         await updateMusic({
-          userId: "Demons",
+          userId: userId,
           model: "unknown",
           taskId: "123",
           suno_id: song.id,

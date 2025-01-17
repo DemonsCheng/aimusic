@@ -39,12 +39,13 @@ import {
   GalleryVerticalEnd,
   LogOut,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { Icons } from "@/components/icons";
 import Image from "next/image";
+
+import { signOut, useSession } from "next-auth/react";
 
 export const company = {
   name: "AISongen",
@@ -61,17 +62,16 @@ export default function AppSidebar() {
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground ">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
             <a href="/">
-            <Image
-              src="/logo.webp"
-              alt="AI Song generator logo"
-              height={50}
-              width={50}
-              className="group-hover:animate-wiggle relative top-0.5"
-            />
+              <Image
+                src="/logo.webp"
+                alt="AI Song generator logo"
+                height={50}
+                width={50}
+                className="group-hover:animate-wiggle relative top-0.5"
+              />
             </a>
           </div>
           <div className="grid flex-1 mt-2 text-left text-sm leading-tight">
-            
             <span className="truncate font-semibold">{company.name}</span>
           </div>
         </div>
@@ -204,10 +204,9 @@ export default function AppSidebar() {
                     <CreditCard />
                     Billing
                   </DropdownMenuItem>
-          
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

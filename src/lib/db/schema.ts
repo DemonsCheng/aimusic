@@ -100,6 +100,7 @@ export const taskTable = pgTable("task", {
   track_id: text("track_id"),
   result: text("result"),
   remark: text("remark"),
+  type: text("type"),
   status: text("status").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).notNull().defaultNow(),
@@ -123,6 +124,7 @@ export const musicTable = pgTable("music", {
   state: text("state"),
   duration: doublePrecision("duration"),
   remark: text("remark"),
+  type: text("type"),
   created_at: timestamp("created_at", { mode: "string" })
     .notNull()
     .defaultNow(),

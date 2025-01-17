@@ -2,16 +2,16 @@ import { SunoAPI } from "@/lib/services/suno-api";
 import { createMusic } from "@/server/service/music";
 import { NextResponse } from "next/server";
 import { respErr } from "@/lib/resp";
+import { auth } from "@/lib/auth/authConfig";
 
 export async function GET(req: Request) {
   try {
-    // const session = await auth();
-    // if (!session?.user?.id) {
-    //   return NextResponse.json(
-    //     { error: "Unauthorized", code: 0 },
-    //     { status: 401 }
-    //   );
-    // }
+    const session = await auth();
+    console.log("session", session);
+    const userId = session?.user?.id;
+    if (!userId) {
+      return respErr("Not signed in");
+    }
     const formData = await req.formData();
     const task_id = formData.get("task_id") as string;
     if (!task_id) {

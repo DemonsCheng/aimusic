@@ -18,7 +18,7 @@ export default function Component() {
 
   useEffect(() => {
     const fetchSongs = async () => {
-      const response = await fetch("https://localhost:3000/api/music", {
+      const response = await fetch("/api/music", {
         method: "GET",
       });
       const { data } = await response.json();
@@ -33,10 +33,12 @@ export default function Component() {
         <div className="bg-muted/50 rounded-xl p-4 mb-4">
           <Playlist songs={songs} />
         </div>
-        <div className={cn(
-          "bg-muted/50 rounded-xl p-2",
-          !currentSong && "flex items-center justify-center"
-        )}>
+        <div
+          className={cn(
+            "bg-muted/50 rounded-xl p-2",
+            !currentSong && "flex items-center justify-center"
+          )}
+        >
           {currentSong ? (
             <Lyrics
               title={currentSong.title || ""}
@@ -48,7 +50,9 @@ export default function Component() {
               verses={currentSong.lyric || ""}
             />
           ) : (
-            <p className="text-muted-foreground">Select a song to view lyrics</p>
+            <p className="text-muted-foreground">
+              Select a song to view lyrics
+            </p>
           )}
         </div>
       </div>
@@ -62,10 +66,12 @@ export default function Component() {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={40} minSize={30} maxSize={45}>
-            <div className={cn(
-              "h-full bg-muted/50 rounded-xl p-2",
-              !currentSong && "flex items-center justify-center"
-            )}>
+            <div
+              className={cn(
+                "h-full bg-muted/50 rounded-xl p-2",
+                !currentSong && "flex items-center justify-center"
+              )}
+            >
               {currentSong ? (
                 <Lyrics
                   title={currentSong.title || ""}
@@ -77,7 +83,9 @@ export default function Component() {
                   verses={currentSong.lyric || ""}
                 />
               ) : (
-                <p className="text-muted-foreground">Select a song to view lyrics</p>
+                <p className="text-muted-foreground">
+                  Select a song to view lyrics
+                </p>
               )}
             </div>
           </ResizablePanel>

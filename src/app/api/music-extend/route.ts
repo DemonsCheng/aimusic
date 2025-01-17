@@ -35,6 +35,9 @@ export async function POST(req: Request) {
 
     let uploadedFileUrl = "";
     let sunoAudioId = "";
+    if (!audioFile) {
+      return respErr("No audio file provided");
+    }
 
     if (audioFile) {
       try {
@@ -52,12 +55,11 @@ export async function POST(req: Request) {
         return respErr("Failed to upload file");
       }
     }
-
     const uuid = randomUUID().toString();
     const generationParams = {
       action: "upload_extend",
       model: "chirp-v3-5",
-      custom: true,
+      custom: formType === "normal",
       instrumental: formType === "instrumental",
       title: formData.get("title")?.toString() || "Untitled",
       prompt:

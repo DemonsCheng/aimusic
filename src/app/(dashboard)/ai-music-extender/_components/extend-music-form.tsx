@@ -154,20 +154,18 @@ export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
     const progressTimer = simulateProgress();
 
     try {
-      const requestData = {
-        lyrics: values.lyrics,
-        musicStyle: values.musicStyle,
-        title: values.title,
-        audioFile: values.audioFile,
-        type: "instrumental",
-      };
+      const formData = new FormData();
+      formData.append("lyrics", values.lyrics);
+      formData.append("musicStyle", values.musicStyle);
+      formData.append("title", values.title);
+      formData.append("type", "normal");
+      if (values.audioFile) {
+        formData.append("audioFile", values.audioFile);
+      }
 
       const res = await fetch("/api/music-extend", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
+        body: formData,
       });
       const { code, data } = await res.json();
 
@@ -213,7 +211,7 @@ export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
       if (values.audioFile) {
         formData.append("audioFile", values.audioFile);
       }
-
+      console.log("123requestData:", values.audioFile);
       const res = await fetch("/api/music-extend", {
         method: "POST",
         body: formData,
@@ -260,6 +258,13 @@ export default function MusicForm({ setSongs, setRefetch }: MusicFormProps) {
       toast.error("File size should be less than 10MB");
       return;
     }
+
+    if (normalForm.getValues("audioFile") === undefined) {
+      normalForm.setValue("audioFile", file);
+    } else {
+      instrumentalForm.setValue("audioFile", file);
+    }
+
     setSelectedFile(file);
     toast.success("File selected successfully");
   }

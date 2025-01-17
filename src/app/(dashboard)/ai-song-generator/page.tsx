@@ -20,7 +20,7 @@ export default function Component() {
 
   useEffect(() => {
     const fetchSongs = async () => {
-      const response = await fetch("http://localhost:3000/api/music", {
+      const response = await fetch("/api/music", {
         method: "GET",
       });
       const { data } = await response.json();
@@ -31,15 +31,41 @@ export default function Component() {
 
   useEffect(() => {
     if (refetch) {
-      const interval = setInterval(async () => {
-        const response = await fetch("http://localhost:3000/api/music", {
-          method: "GET",
-        });
-        const { data } = await response.json();
-        setSongs(data || []);
-      }, 2000);
+      console.log("Polling started");
 
-      return () => clearInterval(interval);
+      const fetchSongs = async () => {
+        try {
+          const response = await fetch("/api/music", {
+            method: "GET",
+          });
+          const { data } = await response.json();
+          console.log("Fetched songs:", data);
+
+          const hasIncompleteMusic = data?.some(
+            (song: SelectMusic) =>
+              !song.audio_url || song.audio_url.length === 0
+          );
+
+          if (!hasIncompleteMusic) {
+            console.log("All music complete, stopping polling");
+            setRefetch(false);
+          }
+
+          setSongs(data || []);
+        } catch (error) {
+          console.error("Error fetching songs:", error);
+          setRefetch(false);
+        }
+      };
+
+      fetchSongs();
+
+      const interval = setInterval(fetchSongs, 2000);
+
+      return () => {
+        console.log("Cleaning up interval");
+        clearInterval(interval);
+      };
     }
   }, [refetch]);
 
