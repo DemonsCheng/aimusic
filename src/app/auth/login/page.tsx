@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 const LoginPage = async () => {
   const isAuthenticated = await checkIsAuthenticated();
   if (isAuthenticated) {
-    redirect("/apps/orverview");
+    redirect("/ai-song-generator");
   } else {
     return (
       <main className="h-screen">

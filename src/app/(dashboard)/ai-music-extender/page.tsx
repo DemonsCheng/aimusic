@@ -20,7 +20,7 @@ export default function Component() {
 
   useEffect(() => {
     const fetchSongs = async () => {
-      const response = await fetch("http://localhost:3000/api/music", {
+      const response = await fetch("/api/music", {
         method: "GET",
       });
       const { data } = await response.json();

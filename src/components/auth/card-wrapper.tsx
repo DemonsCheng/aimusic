@@ -27,9 +27,9 @@ export const CardWrapper = ({
 }: CardWrapperProps) => {
   return (
     <Card className="mx-auto grid w-[450px] gap-6">
-      <CardHeader className="grid gap-2 text-center text-3xl font-bold">
+      {/* <CardHeader className="grid gap-2 text-center text-3xl font-bold">
         <Header label={headerLabel} />
-      </CardHeader>
+      </CardHeader> */}
       <CardContent>{children}</CardContent>
       {showSocial && (
         <CardFooter>

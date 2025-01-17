@@ -8,12 +8,24 @@ import ThemeSwitch from "./ThemeSwitch";
 // import SearchButton from "../search/SearchButton";
 import ActiveLink from "@/components/shared/ActiveLink";
 import Image from "next/image";
-import { LoginButton } from "../auth/login-button";
+import { LoginDialog } from "@/components/auth/login-dialog";
 import { useEffect, useState } from "react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, User } from "lucide-react";
+
+import { Button } from "./ui/button";
+import { signOut } from "@/lib/auth/authConfig";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
@@ -72,9 +84,18 @@ const Header = () => {
           {/* <SearchButton /> */}
           <ThemeSwitch />
           <MobileNav />
-          <LoginButton>Login</LoginButton>
+
+          <Button
+            variant="primary"
+            className="text-base hover:text-primary"
+            onClick={() => setShowLoginDialog(true)}
+          >
+            Login
+          </Button>
         </div>
       </div>
+
+      <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
     </header>
   );
 };
