@@ -55,6 +55,7 @@ export async function POST(req: Request) {
         return respErr("Failed to upload file");
       }
     }
+
     const uuid = randomUUID().toString();
     const generationParams = {
       action: "upload_extend",
