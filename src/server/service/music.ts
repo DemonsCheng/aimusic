@@ -6,7 +6,7 @@ export async function SelectMusic(userId: string) {
   const result = await db
     .select()
     .from(musicTable)
-    .where(eq(musicTable.userId, userId))
+    // .where(eq(musicTable.userId, userId))
     .orderBy(desc(musicTable.created_at))
     .limit(10);
   return result;

@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { MusicPlayerWrapper } from "@/components/music-player-wrapper";
 import { MusicPlayer } from "@/components/music-player";
 import { useMusicStore } from "@/store/music-store";
+import { Providers } from "@/components/layout/providers";
 
 export const metadata: Metadata = {
   title: "Next Shadcn Dashboard Starter",
@@ -21,16 +22,18 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar />
-      <SidebarInset>
-        <Header />
-        {/* page main content */}
-        {children}
-        {/* page main content ends */}
-      </SidebarInset>
-      <MusicPlayerWrapper />
-    </SidebarProvider>
+    <Providers>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar />
+        <SidebarInset>
+          <Header />
+          {/* page main content */}
+          {children}
+          {/* page main content ends */}
+        </SidebarInset>
+        <MusicPlayerWrapper />
+      </SidebarProvider>
+    </Providers>
   );
 }
 

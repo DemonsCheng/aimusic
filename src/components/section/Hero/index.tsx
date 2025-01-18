@@ -5,6 +5,7 @@ import { LandingProductHuntAward } from "@/components/landing/social-proof/Landi
 import { LandingSocialProof } from "@/components/landing/social-proof/LandingSocialProof";
 import { LandingSocialProofBand } from "@/components/landing/social-proof/LandingSocialProofBand";
 import { LandingSocialProofBandItem } from "@/components/landing/social-proof/LandingSocialProofBandItem";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -12,8 +13,8 @@ export default function Hero() {
       <LandingPrimaryImageCtaSection
         title="AI Song Generator"
         description="Transform Your Ideas into Professional Music with our AI Song Generator - Just Pure Creativity"
-        imageSrc="/static/images/shipixen/product/1.webp"
-        imageAlt="Sample image"
+        imageSrc="/ai-song-generator-image.png"
+        imageAlt="ai song generator preview image"
         withBackground
         withBackgroundGlow
         // leadingComponent={<LandingProductHuntAward />}
