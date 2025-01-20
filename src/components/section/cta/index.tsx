@@ -9,7 +9,7 @@ export default function CATs() {
         withBackground
         withBackgroundGlow
         title="Unleash Your Musical Genius"
-        description="Pre-order today and get a 50% discount on the final price for the first 3 months. No credit card required."
+        description="Transform Your Ideas into Professional Music with our AI Song Generator - Just one minute!"
       >
         <Button size="xl" asChild>
           <a href="/ai-song-generator">Start Creating Free</a>

@@ -24,9 +24,7 @@ export default function Home() {
       <Tour />
 
       <UseCase />
-      <div id="pricing">
-       <Pricing />
-      </div>
+      <div id="pricing">{/* <Pricing /> */}</div>
       <Testimonials />
       <FAQs />
       <CTA />
