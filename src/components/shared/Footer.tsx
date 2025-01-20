@@ -64,7 +64,7 @@ export default function Footer({ className }: { className?: string }) {
             ) : null}
 
             <p className="text-xs">
-              © 2025 {siteConfig.businessName} All rights reserved.
+              © 2025 NEXTSAIL TECH LIMITED All rights reserved.
             </p>
           </div>
 
