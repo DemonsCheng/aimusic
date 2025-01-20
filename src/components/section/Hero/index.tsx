@@ -12,7 +12,7 @@ export default function Hero() {
     <>
       <LandingPrimaryImageCtaSection
         title="AI Song Generator"
-        description="Transform Your Ideas into Professional Music with our AI Song Generator - Just Pure Creativity"
+        description="Transform Your Ideas into Professional Music with our AI Song Generator - Just one minute"
         imageSrc="/ai-song-generator-image.png"
         imageAlt="ai song generator preview image"
         withBackground
@@ -27,7 +27,7 @@ export default function Hero() {
           <a href="#">Read more</a>
         </Button> */}
 
-        <LandingSocialProof
+        {/* <LandingSocialProof
           className="w-full mt-12"
           showRating
           numberOfUsers={99}
@@ -45,7 +45,7 @@ export default function Hero() {
               name: "Alice Doe",
             },
           ]}
-        />
+        /> */}
       </LandingPrimaryImageCtaSection>
     </>
   );

@@ -120,101 +120,67 @@ export const LandingPrimaryImageCtaSection = ({
   return (
     <section
       className={clsx(
-        "h-screen w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16 ",
+        "min-h-screen w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16",
         withBackground && variant === "primary"
           ? "bg-primary-100/20 dark:bg-primary-900/10"
           : "",
         withBackground && variant === "secondary"
           ? "bg-secondary-100/20 dark:bg-secondary-900/10"
           : "",
-        withBackgroundGlow || imagePerspective !== "none"
-          ? "overflow-x-hidden"
-          : "",
-        imagePerspective === "paper" ? "md:pb-24" : "",
+        withBackgroundGlow ? "overflow-hidden" : "",
         className
       )}
     >
       <div
         className={clsx(
-          "w-full p-6 flex flex-col gap-8 relative",
-          imagePosition === "center"
-            ? "container-narrow"
-            : "max-w-full container-wide grid lg:grid-cols-2 items-center",
-          textPosition === "center" ? "items-center" : "items-start",
+          "w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+          "flex flex-col items-center gap-12",
           innerClassName
         )}
         style={{
           minHeight,
         }}
       >
-        <LandingPrimaryCtaContent
-          className={clsx(
-            imagePosition === "left" && "lg:col-start-2 lg:row-start-1"
-          )}
-          title={title}
-          titleComponent={titleComponent}
-          description={description}
-          descriptionComponent={descriptionComponent}
-          textPosition={textPosition}
-          leadingComponent={leadingComponent}
-        >
-          {children}
-        </LandingPrimaryCtaContent>
+        <div className="w-full max-w-3xl text-center">
+          <LandingPrimaryCtaContent
+            title={title}
+            titleComponent={titleComponent}
+            description={description}
+            descriptionComponent={descriptionComponent}
+            textPosition="center"
+            leadingComponent={leadingComponent}
+          >
+            {children}
+          </LandingPrimaryCtaContent>
+        </div>
 
-        {imageSrc ? (
-          <>
-            {withBackgroundGlow ? (
-              <div className="hidden lg:flex justify-center w-full h-full absolute pointer-events-none">
+        {imageSrc && (
+          <div className="w-full max-w-5xl relative">
+            {withBackgroundGlow && (
+              <div className="absolute inset-0 pointer-events-none">
                 <GlowBg
-                  className={clsx(
-                    "w-full lg:w-1/2 h-auto z-0 dark:opacity-50",
-                    imagePosition === "center" ? "top-5" : " -top-1/3",
-                    imagePerspective === "paper" ? "opacity-70" : "opacity-100"
-                  )}
+                  className="w-full h-full opacity-70 dark:opacity-50"
                   variant={backgroundGlowVariant}
                 />
               </div>
-            ) : null}
+            )}
 
-            {imagePosition === "center" ? (
-              <section className={clsx("w-full mt-6 md:mt-8")}>
-                <Image
-                  className={clsx(
-                    "w-full rounded-md overflow-hidden",
-                    imageShadow === "soft" && "shadow-md",
-                    imageShadow === "hard" && "hard-shadow"
-                  )}
-                  src={imageSrc}
-                  alt={imageAlt}
-                  width={minHeight + 75}
-                  height={minHeight + 75}
-                />
-              </section>
-            ) : null}
-
-            {imagePosition === "left" || imagePosition === "right" ? (
+            <div className="relative">
               <Image
                 className={clsx(
-                  "w-full rounded-md relative z-10",
+                  "w-full h-auto rounded-lg",
                   imageShadow === "soft" && "shadow-md",
-                  imageShadow === "hard" && "hard-shadow",
-                  imagePerspective === "left" && "lg:perspective-left",
-                  imagePerspective === "right" && "lg:perspective-right",
-                  imagePerspective === "bottom" && "lg:perspective-bottom",
-                  imagePerspective === "bottom-lg" &&
-                    "lg:perspective-bottom-lg",
-                  imagePerspective === "paper" &&
-                    "lg:ml-[7%] lg:perspective-paper",
-                  imagePerspective === "none" ? "my-4" : "my-8"
+                  imageShadow === "hard" && "shadow-xl"
                 )}
-                alt={imageAlt}
                 src={imageSrc}
-                width={minHeight + 75}
-                height={minHeight + 75}
+                alt={imageAlt}
+                width={1200}
+                height={675}
+                priority
               />
-            ) : null}
-          </>
-        ) : null}
+            </div>
+          </div>
+        )}
       </div>
 
       {footerComponent}

@@ -5,6 +5,7 @@ import {
   LandingProductTourContent,
 } from "@/components/landing/LandingProductTour";
 import { VideoPlayer } from "@/components/shared/VideoPlayer";
+import Image from "next/image";
 
 export default function Tour() {
   return (
@@ -52,32 +53,33 @@ export default function Tour() {
           </LandingProductTourTrigger>
         </LandingProductTourList>
         <LandingProductTourContent value="feature-1">
-          <VideoPlayer
-            className={"w-full rounded-md"}
-            src={"https://cache.shipixen.com/features/20-mobile-optimized.mp4"}
-            autoPlay={true}
-            controls={false}
-            loop={true}
+          <Image
+            className={"w-full h-auto rounded-lg"}
+            src={"/ai-song-generator-tour.png"}
+            alt="ai song generator tour"
+            width={600}
+            height={380}
+            priority
           />
         </LandingProductTourContent>
         <LandingProductTourContent value="feature-2">
-          <VideoPlayer
-            className={"w-full rounded-md"}
-            src={
-              "https://cache.shipixen.com/features/11-pricing-page-builder.mp4"
-            }
-            autoPlay={true}
-            controls={false}
-            loop={true}
+          <Image
+            className={"w-full h-auto rounded-lg"}
+            src={"/ai-song-generator-tour.png"}
+            alt="ai song generator tour"
+            width={600}
+            height={380}
+            priority
           />
         </LandingProductTourContent>
         <LandingProductTourContent value="feature-3">
-          <VideoPlayer
-            className={"w-full rounded-md"}
-            src={"https://cache.shipixen.com/features/21-run-locally.mp4"}
-            autoPlay={true}
-            controls={false}
-            loop={true}
+          <Image
+            className={"w-full h-auto rounded-lg"}
+            src={"/ai-song-generator-tour.png"}
+            alt="ai song generator tour"
+            width={600}
+            height={380}
+            priority
           />
         </LandingProductTourContent>
       </LandingProductTourSection>
